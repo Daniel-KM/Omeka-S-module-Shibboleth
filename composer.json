@@ -1,0 +1,15 @@
+{
+    "name": "daniel-km/omeka-plugin-shibboleth",
+    "description": "Authenticate on Omeka via Shibboleth.",
+    "type": "library",
+    "require": {
+        "pear/net_ldap2": "^2.2"
+    },
+    "license": "CECILL-2.1",
+    "authors": [
+        {
+            "name": "Daniel Berthereau",
+            "email": "daniel.packagist@berthereau.net"
+        }
+    ]
+}

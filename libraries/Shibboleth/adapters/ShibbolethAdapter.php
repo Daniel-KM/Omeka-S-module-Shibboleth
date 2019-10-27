@@ -35,8 +35,10 @@
  * @author Ivan Novakov <ivan.novakov@debug.cz>
  * @license http://debug.cz/license/freebsd    FreeBSD License
  */
-require_once 'Net/LDAP2/Entry.php';
-require_once 'Net/LDAP2/Filter.php';
+// require_once 'Net/LDAP2/Entry.php';
+// require_once 'Net/LDAP2/Filter.php';
+
+require_once dirname(__FILE__) . '/../../../vendor/autoload.php';
 
 class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
 {

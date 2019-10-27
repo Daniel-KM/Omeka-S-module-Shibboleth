@@ -1,14 +1,38 @@
-Shibboleth (module for Omeka Classic)
+Shibboleth (plugin for Omeka Classic)
 =====================================
 
-[Shibboleth] is a module for [Omeka Classic] that allows to use Shibboleth to
+[Shibboleth] is a plugin for [Omeka Classic] that allows to use Shibboleth to
 authenticate users.
 
 
 Installation
 ------------
 
-Uncompress files and rename plugin folder `Shibboleth`.
+The plugin uses the php-extension `php-ldap`, so it must be installed on your
+server. Furthermore, it uses [composer] too to manage a dependency. So use the
+release zip to install it, or use and init the source.
+
+* From the zip
+
+Download the last release [Shibboleth.zip] from the list of releases (the master
+does not contain the dependency), and uncompress it in the `plugins` directory.
+
+* From the source and for development:
+
+If the plugin was installed from the source, rename the name of the folder of
+the plugin to `Shibboleth`, and go to the root plugin, and run:
+
+```
+    composer install
+```
+
+The next times:
+
+```
+    composer update
+```
+
+Then install it like any other Omeka plugin.
 
 See general end user documentation for [Installing a plugin] and follow the
 config instructions.
@@ -40,7 +64,8 @@ License
 
 This plugin is published under the [CeCILL v2.1] licence, compatible with
 [GNU/GPL] and approved by [FSF] and [OSI]. It contains some parts from the
-library [ZfcShib], published under [BSD].
+library [ZfcShib], published under [BSD], and the library [PEAR Net_LDAP2],
+published under [LGPL v3.0].
 
 This software is governed by the CeCILL license under French law and abiding by
 the rules of distribution of free software. You can use, modify and/ or
@@ -78,14 +103,18 @@ First developed for the [Nubis] of [Université Paris 1 - Panthéon-Sorbonne].
 
 [Shibboleth]: https://github.com/Daniel-KM/Omeka-plugin-Shibboleth
 [Omeka Classic]: https://omeka.org/classic
+[composer]: https://getcomposer.org
+[Shibboleth.zip]: https://github.com/Daniel-KM/Omeka-plugin-Shibboleth/releases
 [Installing a plugin]: https://omeka.org/classic/docs/Admin/Adding_and_Managing_Plugins
 [plugin issues]: https://github.com/Daniel-KM/Omeka-plugin-Shibboleth/issues
+[PEAR Net_LDAP2]: https://pear.php.net/package/Net_LDAP2
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
 [OSI]: http://opensource.org
 [ZfcShib]: https://github.com/shuyg/ZfcShib
 [BSD]: http://debug.cz/license/bsd-3-clause
+[LGPL v3.0]: https://github.com/pear/Net_LDAP2/raw/master/LICENSE
 [Nubis]: https://nubis.univ-paris1.fr
 [Université Paris 1 - Panthéon-Sorbonne]: https://www.pantheonsorbonne.fr
 [Daniel-KM]: https://github.com/Daniel-KM "Daniel Berthereau"
