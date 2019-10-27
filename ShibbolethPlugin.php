@@ -108,21 +108,34 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookDefineRoutes($args)
     {
+        /** @var Zend_Controller_Router_Abstract $router */
         $router = $args['router'];
 
-        $router->addRoute(
-            'shibboleth',
-            new Zend_Controller_Router_Route(
-                'users/:action/:id',
-                array(
-                    'module' => 'shibboleth',
-                    'controller' => 'users',
-                    'action' => 'index',
-                ),
-                array(
-                    'id' => '\d+',
+        $router
+            ->addRoute(
+                'shibboleth',
+                new Zend_Controller_Router_Route(
+                    'users/:action/:id',
+                    array(
+                        'module' => 'shibboleth',
+                        'controller' => 'users',
+                        'action' => 'index',
+                    ),
+                    array(
+                        'id' => '\d+',
+                    )
                 )
             )
-        );
+            ->addRoute(
+                'shibboleth',
+                new Zend_Controller_Router_Route(
+                    'users/:action',
+                    array(
+                        'module' => 'shibboleth',
+                        'controller' => 'users',
+                        'action' => 'index',
+                    )
+                )
+            );
     }
 }
