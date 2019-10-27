@@ -41,7 +41,9 @@ config instructions.
 Usage
 -----
 
-Set the config.
+Copy the file `roles.ini` from the root of the plugin into the folder `application/config/`
+of Omeka, then map the roles specified inside your Ldap to the ones uses by
+Omeka. Generally, just replace the `xxx` by the ones used in your ldap manager.
 
 
 Warning
