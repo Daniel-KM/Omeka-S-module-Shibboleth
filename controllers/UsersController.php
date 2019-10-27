@@ -81,4 +81,9 @@ class Shibboleth_UsersController extends UsersController
         Zend_Session::destroy();
         $this->_helper->redirector->gotoUrl(WEB_ROOT . '/Shibboleth.sso/Logout?return=' . WEB_ROOT);
     }
+
+    private function _getLog()
+    {
+        return $this->getInvokeArg('bootstrap')->logger;
+    }
 }
