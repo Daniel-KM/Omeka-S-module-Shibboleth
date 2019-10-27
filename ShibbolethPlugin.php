@@ -60,6 +60,14 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
             ));
         }
 
+        $filename = dirname(__FILE__) . '/vendor/autoload.php';
+        if (!file_exists($filename)) {
+            throw new Omeka_Plugin_Installer_Exception(__(
+                'The plugin Shibboleth requires to be installed with composer or extracted from a release. See %s.',
+                'https://github.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
+            ));
+        }
+
         $a = file_get_contents($filename);
         $b = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'shibboleth.ini');
         if ($a === $b) {
