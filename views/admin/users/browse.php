@@ -1,12 +1,20 @@
 <?php
+/**
+ * @var Omeka_View $this
+ * @var User[] $users
+ * @var int $total_results
+ */
+
 $pageTitle = __('Browse Users') . ' ' . __('(%s total)', $total_results);
 echo head(array('title'=>$pageTitle, 'bodyclass'=>'users'));
 echo flash();
 ?>
 
+<?php /* ?>
 <?php if (is_allowed('Users', 'add')): ?>
     <?php echo link_to('users', 'add', __('Add a User'), array('class'=>'small green button')); ?>
 <?php endif; ?>
+*/ ?>
 
 <?php if(isset($_GET['search'])):?>
 <div id='search-filters'>
@@ -58,6 +66,7 @@ echo flash();
         <tr class="<?php if (current_user()->id == $user->id) echo 'current-user '; ?><?php if($key%2==1) echo 'even'; else echo 'odd'; ?><?php if(!$user->active): ?> inactive<?php endif; ?>">
             <td>
             <?php echo html_escape($user->username); ?> <?php if(!$user->active): ?>(<?php echo __('inactive'); ?>)<?php endif; ?>
+<?php /*
             <ul class="action-links group">
                 <?php if (is_allowed($user, 'edit')): ?>
                 <li><?php echo link_to($user, 'edit', __('Edit'), array('class'=>'edit')); ?></li>
@@ -66,6 +75,7 @@ echo flash();
                 <li><?php echo link_to($user, 'delete-confirm', __('Delete'), array('class'=>'delete-confirm')); ?></li>
                 <?php endif; ?>
             </ul>
+*/ ?>
             <?php fire_plugin_hook('admin_users_browse_each', array('user' => $user, 'view' => $this)); ?>
            </td>
             <td><?php echo html_escape($user->name); ?></td>
