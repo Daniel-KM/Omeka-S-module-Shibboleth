@@ -36,6 +36,14 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookInstall()
     {
+        if (!extension_loaded('ldap') || !class_exists('Net_LDAP2_Filter') || !class_exists('Net_LDAP2_Entry')) {
+            throw new Omeka_Plugin_Installer_Exception(__(
+                'The plugin Shibboleth requires the php extension "ldap" to be installed. See %sReadme%s.',
+                '<a href="https://github.com/Daniel-KM/Omeka-plugin-Shibboleth#installation">',
+                '</a>'
+            ));
+        }
+
         $this->_installOptions();
     }
 
