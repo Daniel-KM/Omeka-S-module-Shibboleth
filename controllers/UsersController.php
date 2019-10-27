@@ -18,12 +18,6 @@ class Shibboleth_UsersController extends UsersController
         throw new Omeka_Controller_Exception_404();
     }
 
-    public function showAction()
-    {
-        // Disable showAction as users are now managed with Shibboleth.
-        throw new Omeka_Controller_Exception_404();
-    }
-
     public function addAction()
     {
         // Disable addAction as users are now created at log in with Shibboleth.
@@ -33,7 +27,8 @@ class Shibboleth_UsersController extends UsersController
     public function editAction()
     {
         // Disable editAction as users are now edited with Shibboleth.
-        throw new Omeka_Controller_Exception_404();
+        // But keep the action, since it's enabled by default in the admin bar.
+        $this->forward('show');
     }
 
     public function changePasswordAction()
