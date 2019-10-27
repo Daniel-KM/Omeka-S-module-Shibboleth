@@ -46,9 +46,10 @@ class Shibboleth_UsersController extends UsersController
     public function loginAction()
     {
         $this->_helper->viewRenderer->setNoRender();
-        require_once '../../libraries/Shibboleth/adapters/ShibbolethAdapter.php';
+        require_once dirname(__FILE__) . '/../libraries/Shibboleth/adapters/ShibbolethAdapter.php';
 
-        $authAdapter = new ShibbolethAdapter();
+        $shibbolethConfig = new Zend_Config_Ini(APP_DIR . '/config/shibboleth.ini', null, true);
+        $authAdapter = new ShibbolethAdapter($shibbolethConfig->toArray());
         $authResult = $this->_auth->authenticate($authAdapter);
 
         if (!$authResult->isValid()) {

@@ -44,7 +44,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
             ));
         }
 
-        $filename = APP_DIR . '/config/roles.ini';
+        $filename = APP_DIR . '/config/shibboleth.ini';
         if (!file_exists($filename)) {
             throw new Omeka_Plugin_Installer_Exception(__(
                 'The plugin Shibboleth requires the file "roles.ini" in the main config dir of Omeka to map roles. See %sReadme%s.',
@@ -54,10 +54,10 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
         }
 
         $a = file_get_contents($filename);
-        $b = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'roles.ini');
+        $b = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'shibboleth.ini');
         if ($a === $b) {
             throw new Omeka_Plugin_Installer_Exception(__(
-                'The plugin Shibboleth requires the file "roles.ini" to be adapted to your ldap. See %sReadme%s.',
+                'The plugin Shibboleth requires the file "shibboleth.ini" to be adapted to your ldap. See %sReadme%s.',
                 '<a href="https://github.com/Daniel-KM/Omeka-plugin-Shibboleth#installation">',
                 '</a>'
             ));

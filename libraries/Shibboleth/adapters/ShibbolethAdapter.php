@@ -69,6 +69,23 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
             'cn' => 'name',
             'mail' => 'email',
         ),
+        'production' => array(
+            'roles' => array(
+                'super' => '',
+                'admin' => '',
+                'contributor' => '',
+                'researcher' => '',
+            ),
+        ),
+        // TODO Roles in development is currently not managed.
+        'development' => array(
+            'roles' => array(
+                'super' => '',
+                'admin' => '',
+                'contributor' => '',
+                'researcher' => '',
+            ),
+        ),
     );
 
     /**
@@ -100,7 +117,6 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
     public function __construct(array $config = array(), array $env = null)
     {
         $this->_config = new Zend_Config($config + $this->_defaultOptions);
-
         if (!$env) {
             $env = $_SERVER;
         }
@@ -299,7 +315,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
 
     protected function _updateRole()
     {
-        $roles = new Zend_Config_Ini(APP_DIR . '/config/roles.ini', 'production');
+        $roles = $this->_config->production->roles;
 
         $roleSuper = Net_LDAP2_Filter::parse($roles->super);
         $roleAdmin = Net_LDAP2_Filter::parse($roles->admin);
