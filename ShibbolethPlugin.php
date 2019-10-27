@@ -25,6 +25,13 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
     );
 
     /**
+     * @var array This plugin's filters.
+     */
+    protected $_filters = array(
+        'admin_navigation_users',
+    );
+
+    /**
      * @var array This plugin's options.
      */
     protected $_options = array(
@@ -137,5 +144,20 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
                     )
                 )
             );
+    }
+
+    /**
+     * @param array $navLinks
+     * @param array $args
+     * @return array
+     */
+    public function filterAdminNavigationUsers($navLinks, $args)
+    {
+        foreach ($navLinks as $key => $navLink) {
+            if ($navLink['privilege'] === 'change-password') {
+                unset($navLink[$key]);
+            }
+        }
+        return $navLinks;
     }
 }
