@@ -40,13 +40,13 @@ require_once 'Net/LDAP2/Filter.php';
 
 class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
 {
-
     /**
      * The configuration object.
      *
      * @var Zend_Config
      */
-    protected $_config = NULL;
+    protected $_config = null;
+
     /**
      * Array of default options.
      *
@@ -68,6 +68,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
             'mail' => 'email',
         ),
     );
+
     /**
      * System variable keys.
      *
@@ -78,42 +79,45 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
         'appIdpVar',
         'authIdVar',
         'authInstantVar',
-        'authContextVar'
+        'authContextVar',
     );
+
     /**
      * Array containing environment variables.
      *
      * @var array
      */
     protected $_env = array();
+
     /**
      * Constructor.
      *
      * @param array $config
      * @param array $env
      */
-    public function __construct (Array $config = array(), Array $env = NULL)
+    public function __construct(array $config = array(), array $env = null)
     {
         $this->_config = new Zend_Config($config + $this->_defaultOptions);
 
-        if (! $env) {
+        if (!$env) {
             $env = $_SERVER;
         }
         $this->_env = $env;
     }
+
     /**
      * Implementation of the authenticate() call defineed by the adapter interface.
      *
      * @see Zend_Auth_Adapter_Interface::authenticate()
      */
-    public function authenticate ()
+    public function authenticate()
     {
         /*
          * If there is no Shibboleth session, the authentication is impossible.
          */
         if (! $this->_isSession()) {
             return $this->_failureResult(array(
-                'no_session'
+                'no_session',
             ));
         }
 
@@ -128,7 +132,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
 
         if (! isset($userAttrs[$this->_config->identityVar])) {
             return $this->_failureResult(array(
-                'no_identity'
+                'no_identity',
             ), Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND);
         }
 
@@ -137,7 +141,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
          */
         if (is_array($userAttrs[$this->_config->identityVar])) {
             return $this->_failureResult(array(
-                'multiple_id_attr_value'
+                'multiple_id_attr_value',
             ), Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS);
         }
 
@@ -188,35 +192,37 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
             $username,
             array(__('User matching "%s" not found.', $username))
         );
-
     }
+
     /**
      * Returns a failure Zend_Auth_Result.
      *
      * @param array $messages
-     * @param integer $code
+     * @param int $code
      * @return Zend_Auth_Result
      */
-    protected function _failureResult (Array $messages, $code = Zend_Auth_Result::FAILURE)
+    protected function _failureResult(array $messages, $code = Zend_Auth_Result::FAILURE)
     {
-        return new Zend_Auth_Result($code, NULL, $messages);
+        return new Zend_Auth_Result($code, null, $messages);
     }
+
     /**
      * Returns a successful Zend_Auth_Result.
      *
      * @param array $userAttrs
      * @return Zend_Auth_Result
      */
-    protected function _successResult (Array $userAttrs)
+    protected function _successResult(array $userAttrs)
     {
         return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $userAttrs);
     }
+
     /**
      * Parses Shibboleth attributes and maps them into an array.
      *
      * @return array
      */
-    protected function _extractAttributes ()
+    protected function _extractAttributes()
     {
         $attrs = array();
 
@@ -252,21 +258,23 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
 
         return $attrs;
     }
+
     /**
      * Returns true, if a Shibboleth session exists.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function _isSession ()
+    protected function _isSession()
     {
         return ($this->_getSession());
     }
+
     /**
      * Returns the Shibboleth session ID, if present. Otherwise returns NULL.
      *
      * @return string|NULL
      */
-    protected function _getSession ()
+    protected function _getSession()
     {
         return $this->_getEnv($this->_config->sessionIdVar);
     }
@@ -276,7 +284,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
      * @param string $index
      * @return string|NULL
      */
-    protected function _getEnv ($index)
+    protected function _getEnv($index)
     {
         $index = $this->_config->attrPrefix . $index;
 
@@ -284,17 +292,17 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
             return $this->_env[$index];
         }
 
-        return NULL;
+        return null;
     }
 
-    protected function _updateRole ()
+    protected function _updateRole()
     {
         $roles = new Zend_Config_Ini(APP_DIR . '/config/roles.ini', 'production');
 
         $roleSuper = Net_LDAP2_Filter::parse($roles->super);
-        $roleAdmin= Net_LDAP2_Filter::parse($roles->admin);
-        $roleContributor= Net_LDAP2_Filter::parse($roles->contributor);
-        $roleResearcher= Net_LDAP2_Filter::parse($roles->researcher);
+        $roleAdmin = Net_LDAP2_Filter::parse($roles->admin);
+        $roleContributor = Net_LDAP2_Filter::parse($roles->contributor);
+        $roleResearcher = Net_LDAP2_Filter::parse($roles->researcher);
 
         $userAttrs = $this->_extractAttributes();
         $entry = Net_LDAP2_Entry::createFresh('', $userAttrs);
@@ -313,5 +321,4 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
 
         return $role;
     }
-
 }
