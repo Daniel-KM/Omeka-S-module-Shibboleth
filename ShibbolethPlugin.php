@@ -28,6 +28,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array This plugin's filters.
      */
     protected $_filters = array(
+        'admin_whitelist',
         'admin_navigation_users',
     );
 
@@ -157,6 +158,20 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
                     )
                 )
             );
+    }
+
+    /**
+     * @param array $adminWhitelist
+     * @return array
+     */
+    public function filterAdminWhitelist($adminWhitelist)
+    {
+        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'activate');
+        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'login');
+        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'forgot-password');
+        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'notify');
+        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'error');
+        return $adminWhitelist;
     }
 
     /**
