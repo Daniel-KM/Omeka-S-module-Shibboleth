@@ -50,6 +50,30 @@ the `xxx` by the ones used in your ldap manager.
 Before moving into production, check the security and check the rights of each
 roles.
 
+Don’t forget to enable Shibboleth in the param of the web server (Apache here),
+according to your own configuration:
+```
+    <Location />
+        AuthType shibboleth
+        ShibRequireSession Off
+        require shibboleth
+    </Location>
+
+    <Location /admin>
+        AuthType shibboleth
+        ShibRequireSession On
+        ShibUseHeaders On
+        ShibRequestSetting requireSession 1
+        Require valid-user
+    </Location>
+
+    <Location /Shibboleth.sso>
+    #   Order Deny,Allow
+    #   Allow from all
+        SetHandler shib
+    </Location>
+```
+
 
 Warning
 -------
