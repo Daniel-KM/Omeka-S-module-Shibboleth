@@ -133,7 +133,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
 
         $router
             ->addRoute(
-                'shibboleth',
+                'shibboleth_id',
                 new Zend_Controller_Router_Route(
                     'users/:action/:id',
                     array(
