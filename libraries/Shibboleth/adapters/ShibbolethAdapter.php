@@ -163,7 +163,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
             ), Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS);
         }
 
-        // find user by eppn
+        // Find user by the specified identifier (generally uid or email).
         $username = $userAttrs[$this->_config->identityVar];
         $user = get_db()->getTable('User')->findBySql(
             'username = ?',
@@ -171,31 +171,29 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
             true
         );
 
-        // if user was found update his role
-        if ($user):
-            $role = $this->_updateRole();
-            if ($role):
+        $role = $this->_updateRole();
+
+        if ($user) {
+            // If user was found update his role in all cases.
+            if ($role) {
                 $user->role = $role;
-            // deactivate user if already existing but does not have a role anymore
-            else:
+            }
+            // Deactivate user if already existing but does not have a role anymore.
+            else {
                 $user->active = false;
-            endif;
+            }
             $user->save(false);
-        // else create and activate a user
-        else:
+        }
+        // Else create and activate a user, if there is a role.
+        elseif ($role) {
             $user = new User();
             $user->username = $username;
             $user->name = $userAttrs['name'];
             $user->email = $userAttrs['email'];
-
-            $role = $this->_updateRole($user);
-            // save only if user has a role
-            if ($role):
-                $user->active = true;
-                $user->role = $role;
-                $user->save(false);
-            endif;
-        endif;
+            $user->role = $role;
+            $user->active = true;
+            $user->save(false);
+        }
 
         // If the user was found and active, return success.
         if ($user && $user->active) {
@@ -204,6 +202,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
                 $user->id
             );
         }
+
         // Return that the user does not have an active account.
         return new Zend_Auth_Result(
             Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND,
@@ -327,15 +326,15 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
 
         $role = '';
 
-        if (is_a($roleSuper, 'Net_LDAP2_Filter') && $roleSuper->matches($entry)):
+        if (is_a($roleSuper, 'Net_LDAP2_Filter') && $roleSuper->matches($entry)) {
             $role = 'super';
-        elseif (is_a($roleAdmin, 'Net_LDAP2_Filter') && $roleAdmin->matches($entry)):
+        } elseif (is_a($roleAdmin, 'Net_LDAP2_Filter') && $roleAdmin->matches($entry)) {
             $role = 'admin';
-        elseif (is_a($roleContributor, 'Net_LDAP2_Filter') && $roleContributor->matches($entry)):
+        } elseif (is_a($roleContributor, 'Net_LDAP2_Filter') && $roleContributor->matches($entry)) {
             $role = 'contributor';
-        elseif (is_a($roleResearcher, 'Net_LDAP2_Filter') &&  $roleResearcher->matches($entry)):
+        } elseif (is_a($roleResearcher, 'Net_LDAP2_Filter') && $roleResearcher->matches($entry)) {
             $role = 'researcher';
-        endif;
+        }
 
         return $role;
     }
