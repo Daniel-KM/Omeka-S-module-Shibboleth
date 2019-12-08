@@ -1,8 +1,8 @@
 Shibboleth (plugin for Omeka Classic)
 =====================================
 
-[Shibboleth] is a plugin for [Omeka Classic] that allows to use Shibboleth to
-authenticate users.
+[Shibboleth] is a plugin for [Omeka Classic] that allows to use [Shibboleth single sign-on services]
+to authenticate users.
 
 
 Installation
@@ -134,6 +134,7 @@ First developed for the [Nubis] of [Université Paris 1 - Panthéon-Sorbonne].
 
 [Shibboleth]: https://github.com/Daniel-KM/Omeka-plugin-Shibboleth
 [Omeka Classic]: https://omeka.org/classic
+[Shibboleth single sign-on services]: https://www.shibboleth.net
 [composer]: https://getcomposer.org
 [Shibboleth.zip]: https://github.com/Daniel-KM/Omeka-plugin-Shibboleth/releases
 [Installing a plugin]: https://omeka.org/classic/docs/Admin/Adding_and_Managing_Plugins

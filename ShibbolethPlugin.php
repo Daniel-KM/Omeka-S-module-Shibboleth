@@ -3,7 +3,7 @@
 /**
  * Shibboleth Plugin
  *
- * Allows to use Shibboleth to authenticate users.
+ * Allows to use Shibboleth single sign-on to authenticate users.
  *
  * @author Vincent Pretet <Vincent.Pretet@univ-paris1.fr>
  * @author Daniel Berthereau <daniel.github@berthereau.net>
