@@ -184,7 +184,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
         // else create and activate a user
         else:
             $user = new User();
-            $user->username = $userAttrs['username'];
+            $user->username = $username;
             $user->name = $userAttrs['name'];
             $user->email = $userAttrs['email'];
 
