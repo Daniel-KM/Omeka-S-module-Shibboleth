@@ -1,6 +1,10 @@
 Shibboleth (plugin for Omeka Classic)
 =====================================
 
+> __New versions of this module and support for Omeka S version 3.0 and above
+> are available on [GitLab], which seems to respect users and privacy better
+> than the previous repository.__
+
 [Shibboleth] is a plugin for [Omeka Classic] that allows to use [Shibboleth single sign-on services]
 to authenticate users.
 
@@ -22,14 +26,8 @@ does not contain the dependency), and uncompress it in the `plugins` directory.
 If the plugin was installed from the source, rename the name of the folder of
 the plugin to `Shibboleth`, and go to the root plugin, and run:
 
-```
-    composer install
-```
-
-The next times:
-
-```
-    composer update
+```sh
+composer install --no-dev
 ```
 
 Then install it like any other Omeka plugin.
@@ -52,26 +50,27 @@ roles.
 
 Don’t forget to enable Shibboleth in the param of the web server (Apache here),
 according to your own configuration:
+
 ```
-    <Location />
-        AuthType shibboleth
-        ShibRequireSession Off
-        require shibboleth
-    </Location>
+<Location />
+    AuthType shibboleth
+    ShibRequireSession Off
+    require shibboleth
+</Location>
 
-    <Location /admin>
-        AuthType shibboleth
-        ShibRequireSession On
-        ShibUseHeaders On
-        ShibRequestSetting requireSession 1
-        Require valid-user
-    </Location>
+<Location /admin>
+    AuthType shibboleth
+    ShibRequireSession On
+    ShibUseHeaders On
+    ShibRequestSetting requireSession 1
+    Require valid-user
+</Location>
 
-    <Location /Shibboleth.sso>
-    #   Order Deny,Allow
-    #   Allow from all
-        SetHandler shib
-    </Location>
+<Location /Shibboleth.sso>
+#   Order Deny,Allow
+#   Allow from all
+    SetHandler shib
+</Location>
 ```
 
 
@@ -93,10 +92,10 @@ See online issues on the [plugin issues] page.
 License
 -------
 
-This plugin is published under the [CeCILL v2.1] licence, compatible with
-[GNU/GPL] and approved by [FSF] and [OSI]. It contains some parts from the
-library [ZfcShib], published under [BSD], and the library [PEAR Net_LDAP2],
-published under [LGPL v3.0].
+### Plugin
+
+This plugin is published under the [CeCILL v2.1] license, compatible with
+[GNU/GPL] and approved by [FSF] and [OSI].
 
 This software is governed by the CeCILL license under French law and abiding by
 the rules of distribution of free software. You can use, modify and/ or
@@ -121,32 +120,37 @@ conditions as regards security.
 The fact that you are presently reading this means that you have had knowledge
 of the CeCILL license and that you accept its terms.
 
+# Libraries
+
+This plugin contains some parts from the library [ZfcShib], published under [BSD],
+and the library [PEAR Net_LDAP2], published under [LGPL v3.0].
+
 
 Copyright
 ---------
 
 * Copyright Ivan Novakov, 2013 (see [ZfcShib])
 * Copyright Vincent Pretet, 2016-2017 for Université Paris 1 - Panthéon-Sorbonne
-* Copyright Daniel Berthereau, 2019 (see [Daniel-KM])
+* Copyright Daniel Berthereau, 2019-2020 (see [Daniel-KM])
 
 First developed for the [Nubis] of [Université Paris 1 - Panthéon-Sorbonne].
 
 
-[Shibboleth]: https://github.com/Daniel-KM/Omeka-plugin-Shibboleth
+[Shibboleth]: https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth
 [Omeka Classic]: https://omeka.org/classic
 [Shibboleth single sign-on services]: https://www.shibboleth.net
 [composer]: https://getcomposer.org
-[Shibboleth.zip]: https://github.com/Daniel-KM/Omeka-plugin-Shibboleth/releases
+[Shibboleth.zip]: https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth/-/releases
 [Installing a plugin]: https://omeka.org/classic/docs/Admin/Adding_and_Managing_Plugins
-[plugin issues]: https://github.com/Daniel-KM/Omeka-plugin-Shibboleth/issues
+[plugin issues]: https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth/-/issues
 [PEAR Net_LDAP2]: https://pear.php.net/package/Net_LDAP2
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [FSF]: https://www.fsf.org
 [OSI]: http://opensource.org
-[ZfcShib]: https://github.com/shuyg/ZfcShib
+[ZfcShib]: https://github.com/ivan-novakov/ZfcShib
 [BSD]: http://debug.cz/license/bsd-3-clause
 [LGPL v3.0]: https://github.com/pear/Net_LDAP2/raw/master/LICENSE
 [Nubis]: https://nubis.univ-paris1.fr
 [Université Paris 1 - Panthéon-Sorbonne]: https://www.pantheonsorbonne.fr
-[Daniel-KM]: https://github.com/Daniel-KM "Daniel Berthereau"
+[Daniel-KM]: https://gitlab.com/Daniel-KM "Daniel Berthereau"
