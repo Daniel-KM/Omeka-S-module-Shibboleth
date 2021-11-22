@@ -12,8 +12,10 @@ to authenticate users.
 Installation
 ------------
 
-The module uses the php-extension `php-ldap`, so it must be installed on your
-server. Furthermore, it uses [composer] too to manage a dependency. So use the
+The module uses the php-extension [php-ldap], so it must be installed on your
+server, generally a package named "php-ldap" in most common Linux distributions.
+
+Furthermore, it uses [composer] too to manage a dependency. So use the
 release zip to install it, or use and init the source.
 
 * From the zip
@@ -30,6 +32,8 @@ the module to `Shibboleth`, and go to the root of the module, and run:
 composer install --no-dev
 ```
 
+Before enabling the module in admin interface, the config must be updated.
+
 Then install it like any other Omeka module.
 
 See general end user documentation for [installing a module].
@@ -38,13 +42,12 @@ See general end user documentation for [installing a module].
 Usage
 -----
 
-Copy the file `shibboleth.ini` available in the folder `config` of the plugin
-into the folder `config/` of Omeka, then update this config file.
+Copy the array `[shibboleth]` from the config of the module to the local config
+of Omeka (file `config/local.config.php`) and adapt it to your network config.
 
-In particular, the attribute map may be modified to get the good username and
-display name. The roles specified inside your Ldap must be mapped to the ones
-uses by Omeka too. Generally, just replace the `xxx` by the ones used in your
-ldap manager.
+In particular, the attribute map may be modified to get the good username. The
+roles specified inside your Ldap must be mapped to the ones uses by Omeka too.
+Generally, just replace the `xxx` by the ones used in your ldap manager.
 
 Before moving into production, check the security and check the rights of each
 roles.
@@ -140,6 +143,7 @@ First developed for the [Nubis] of [Université Paris 1 - Panthéon-Sorbonne].
 [Shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth
 [Omeka S]: https://omeka.org/s
 [Shibboleth single sign-on services]: https://www.shibboleth.net
+[php-ldap]: https://www.php.net/manual/fr/book.ldap.php
 [composer]: https://getcomposer.org
 [Shibboleth.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/releases
 [installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
