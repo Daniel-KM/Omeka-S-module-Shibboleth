@@ -1,49 +1,50 @@
-Shibboleth (plugin for Omeka Classic)
-=====================================
+Shibboleth (module for Omeka S)
+===============================
 
 > __New versions of this module and support for Omeka S version 3.0 and above
 > are available on [GitLab], which seems to respect users and privacy better
 > than the previous repository.__
 
-[Shibboleth] is a plugin for [Omeka Classic] that allows to use [Shibboleth single sign-on services]
+[Shibboleth] is a module for [Omeka S] that allows to use [Shibboleth single sign-on services]
 to authenticate users.
 
 
 Installation
 ------------
 
-The plugin uses the php-extension `php-ldap`, so it must be installed on your
+The module uses the php-extension `php-ldap`, so it must be installed on your
 server. Furthermore, it uses [composer] too to manage a dependency. So use the
 release zip to install it, or use and init the source.
 
 * From the zip
 
 Download the last release [Shibboleth.zip] from the list of releases (the master
-does not contain the dependency), and uncompress it in the `plugins` directory.
+does not contain the dependency), and uncompress it in the `modules` directory.
 
 * From the source and for development:
 
-If the plugin was installed from the source, rename the name of the folder of
-the plugin to `Shibboleth`, and go to the root plugin, and run:
+If the module was installed from the source, rename the name of the folder of
+the module to `Shibboleth`, and go to the root of the module, and run:
 
 ```sh
 composer install --no-dev
 ```
 
-Then install it like any other Omeka plugin.
+Then install it like any other Omeka module.
 
-See general end user documentation for [Installing a plugin] and follow the
-config instructions.
+See general end user documentation for [installing a module].
 
 
 Usage
 -----
 
-Copy the file `shibboleth.ini` from the root of the plugin into the folder `application/config/`
-of Omeka, then update this config file. In particular the attribute map may be
-modified to get the good username and display name. The roles specified inside
-your Ldap must be mapped to the ones uses by Omeka too. Generally, just replace
-the `xxx` by the ones used in your ldap manager.
+Copy the file `shibboleth.ini` available in the folder `config` of the plugin
+into the folder `config/` of Omeka, then update this config file.
+
+In particular, the attribute map may be modified to get the good username and
+display name. The roles specified inside your Ldap must be mapped to the ones
+uses by Omeka too. Generally, just replace the `xxx` by the ones used in your
+ldap manager.
 
 Before moving into production, check the security and check the rights of each
 roles.
@@ -86,15 +87,15 @@ your archives regularly so you can roll back if needed.
 Troubleshooting
 ---------------
 
-See online issues on the [plugin issues] page.
+See online issues on the [module issues] page on GitLab.
 
 
 License
 -------
 
-### Plugin
+# Module
 
-This plugin is published under the [CeCILL v2.1] license, compatible with
+This module is published under the [CeCILL v2.1] license, compatible with
 [GNU/GPL] and approved by [FSF] and [OSI].
 
 This software is governed by the CeCILL license under French law and abiding by
@@ -122,7 +123,7 @@ of the CeCILL license and that you accept its terms.
 
 # Libraries
 
-This plugin contains some parts from the library [ZfcShib], published under [BSD],
+This module contains some parts from the library [ZfcShib], published under [BSD],
 and the library [PEAR Net_LDAP2], published under [LGPL v3.0].
 
 
@@ -131,18 +132,18 @@ Copyright
 
 * Copyright Ivan Novakov, 2013 (see [ZfcShib])
 * Copyright Vincent Pretet, 2016-2017 for Université Paris 1 - Panthéon-Sorbonne
-* Copyright Daniel Berthereau, 2019-2020 (see [Daniel-KM])
+* Copyright Daniel Berthereau, 2019-2021 (see [Daniel-KM])
 
 First developed for the [Nubis] of [Université Paris 1 - Panthéon-Sorbonne].
 
 
-[Shibboleth]: https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth
-[Omeka Classic]: https://omeka.org/classic
+[Shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth
+[Omeka S]: https://omeka.org/s
 [Shibboleth single sign-on services]: https://www.shibboleth.net
 [composer]: https://getcomposer.org
-[Shibboleth.zip]: https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth/-/releases
-[Installing a plugin]: https://omeka.org/classic/docs/Admin/Adding_and_Managing_Plugins
-[plugin issues]: https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth/-/issues
+[Shibboleth.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/releases
+[installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
+[module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/issues
 [PEAR Net_LDAP2]: https://pear.php.net/package/Net_LDAP2
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
@@ -153,4 +154,5 @@ First developed for the [Nubis] of [Université Paris 1 - Panthéon-Sorbonne].
 [LGPL v3.0]: https://github.com/pear/Net_LDAP2/raw/master/LICENSE
 [Nubis]: https://nubis.univ-paris1.fr
 [Université Paris 1 - Panthéon-Sorbonne]: https://www.pantheonsorbonne.fr
+[GitLab]: https://gitlab.com/Daniel-KM
 [Daniel-KM]: https://gitlab.com/Daniel-KM "Daniel Berthereau"

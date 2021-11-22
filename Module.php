@@ -6,7 +6,7 @@
  * Allows to use Shibboleth single sign-on to authenticate users.
  *
  * @author Vincent Pretet <Vincent.Pretet@univ-paris1.fr>
- * @author Daniel Berthereau <daniel.github@berthereau.net>
+ * @author Daniel Berthereau <daniel.gitlab@berthereau.net>
  * @license CeCILL v2.1 https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
  *
  * @package Omeka\Plugins\Shibboleth

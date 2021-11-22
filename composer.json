@@ -1,5 +1,5 @@
 {
-    "name": "daniel-km/omeka-plugin-shibboleth",
+    "name": "daniel-km/omeka-s-module-shibboleth",
     "description": "Authenticate on Omeka via Shibboleth.",
     "type": "library",
     "require": {
