@@ -10,6 +10,11 @@ return [
     ],
     // Copy this array into Omeka config/local.config.php and adapt it to your network.
     'shibboleth' => [
+        // This option can be skipped.
+        'config' => [
+            // Set true if you don't want user accounts managed by Omeka inside database.
+            'shibboleth_only' => false,
+        ],
         'params' => [
             'attrPrefix' => '',
             'attrValueSeparator' => ';',

@@ -12,6 +12,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Omeka\Authentication\Adapter\KeyAdapter;
 use Omeka\Authentication\Storage\DoctrineWrapper;
 use Shibboleth\Authentication\Adapter\ShibbolethAdapter;
+use Shibboleth\Authentication\Adapter\ShibbolethOrPasswordAdapter;
 
 /**
  * Authentication service factory.
@@ -46,8 +47,11 @@ class AuthenticationServiceFactory implements FactoryInterface
             } else {
                 // Authenticate using user/password for all other requests.
                 $storage = new DoctrineWrapper(new Session, $userRepository);
+                $config = $serviceLocator->get('Config');
                 $shibbolethParams = $serviceLocator->get('Config')['shibboleth']['params'];
-                $adapter = new ShibbolethAdapter($entityManager, $shibbolethParams, null);
+                $adapter = empty($config['shibboleth']['config']['shibboleth_only'])
+                    ? new ShibbolethOrPasswordAdapter($entityManager, $shibbolethParams, null)
+                    : new ShibbolethAdapter($entityManager, $shibbolethParams, null);
             }
         }
 
