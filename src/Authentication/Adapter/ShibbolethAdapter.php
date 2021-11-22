@@ -59,14 +59,14 @@ class ShibbolethAdapter extends AbstractAdapter
     /**
      * The configuration array.
      */
-    protected $_config = [];
+    protected $config = [];
 
     /**
-     * Array of default options.
+     * Default config.
      *
      * @var array
      */
-    protected $_defaultOptions = [
+    protected $defaultConfig = [
         'attrPrefix' => '',
         'attrValueSeparator' => ';',
         'sessionIdVar' => 'Shib-Session-ID',
@@ -116,7 +116,7 @@ class ShibbolethAdapter extends AbstractAdapter
      *
      * @var array
      */
-    protected $_systemVars = [
+    protected $systemVars = [
         'idpVar',
         'appIdpVar',
         'authIdVar',
@@ -129,13 +129,16 @@ class ShibbolethAdapter extends AbstractAdapter
      *
      * @var array
      */
-    protected $_env = [];
+    protected $env = [];
 
-    public function __construct(EntityManager $entityManager, array $config = [], array $env = null)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        array $config = [],
+        array $env = null
+    ) {
         $this->entityManager = $entityManager;
-        $this->_config = $config + $this->_defaultOptions;
-        $this->_env = $env ?: $_SERVER;
+        $this->config = $config + $this->defaultConfig;
+        $this->env = $env ?: $_SERVER;
     }
 
     /**
@@ -144,7 +147,7 @@ class ShibbolethAdapter extends AbstractAdapter
     public function authenticate()
     {
         // If there is no Shibboleth session, the authentication is impossible.
-        if (!$this->_isSession()) {
+        if (!$this->isSession()) {
             return new Result(
                 Result::FAILURE_UNCATEGORIZED,
                 null,
@@ -153,11 +156,11 @@ class ShibbolethAdapter extends AbstractAdapter
         }
 
         // Get attributes from the Shibboleth session.
-        $userAttrs = $this->_extractAttributes();
+        $userAttrs = $this->extractAttributes();
 
         // Check if the "identityVar" is present. If not, the authentication
         // cannot be completed.
-        if (!isset($userAttrs[$this->_config['identityVar']])) {
+        if (!isset($userAttrs[$this->config['identityVar']])) {
             return new Result(
                 Result::FAILURE_IDENTITY_NOT_FOUND,
                 null,
@@ -166,7 +169,7 @@ class ShibbolethAdapter extends AbstractAdapter
         }
 
         // If the "identityVar" variable contains more than one value, throw an error.
-        if (is_array($userAttrs[$this->_config['identityVar']])) {
+        if (is_array($userAttrs[$this->config['identityVar']])) {
             return new Result(
                 Result::FAILURE_IDENTITY_AMBIGUOUS,
                 null,
@@ -176,7 +179,7 @@ class ShibbolethAdapter extends AbstractAdapter
 
         // Find user by the specified identifier (generally uid or email).
         // In Omeka S, there is no username, only an email and a display name.
-        $email = $userAttrs[$this->_config['identityVar']];
+        $email = $userAttrs[$this->config['identityVar']];
         $user = $this->entityManager->getRepository(\Omeka\Entity\User::class)
             ->findOneBy([
                 'email' => $email,
@@ -229,16 +232,16 @@ class ShibbolethAdapter extends AbstractAdapter
     /**
      * Parses Shibboleth attributes and maps them into an array.
      */
-    protected function _extractAttributes(): array
+    protected function extractAttributes(): array
     {
         $attrs = [];
 
         // Use the "attrMap" configuration parameter to map attributes.
-        foreach ($this->_config['attrMap'] as $srcIndex => $dstIndex) {
-            if ($value = $this->_getEnv($srcIndex)) {
+        foreach ($this->config['attrMap'] as $srcIndex => $dstIndex) {
+            if ($value = $this->getEnv($srcIndex)) {
                 // Some Shibboleth attributes have multiple values, serialized.
                 // The only way to find that out is to try to split the values by separator.
-                $values = explode($this->_config['attrValueSeparator'], $value);
+                $values = explode($this->config['attrValueSeparator'], $value);
                 $attrs[$dstIndex] = count($values) <= 1
                     ? $value
                     : $values;
@@ -246,10 +249,10 @@ class ShibbolethAdapter extends AbstractAdapter
         }
 
         // Add relevant environment variables to the array.
-        if ($this->_config['systemVarsInResult']) {
-            foreach ($this->_systemVars as $systemVarName) {
-                $envVarName = $this->_config[$systemVarName] ?? null;
-                if ($envVarName && ($value = $this->_getEnv($envVarName))) {
+        if ($this->config['systemVarsInResult']) {
+            foreach ($this->systemVars as $systemVarName) {
+                $envVarName = $this->config[$systemVarName] ?? null;
+                if ($envVarName && ($value = $this->getEnv($envVarName))) {
                     $attrs['env'][$envVarName] = $value;
                 }
             }
@@ -261,28 +264,28 @@ class ShibbolethAdapter extends AbstractAdapter
     /**
      * Returns true, if a Shibboleth session exists.
      */
-    protected function _isSession(): bool
+    protected function isSession(): bool
     {
-        return (bool) $this->_getSession();
+        return (bool) $this->getSession();
     }
 
     /**
      * Returns the Shibboleth session ID, if present. Otherwise returns NULL.
      */
-    protected function _getSession(): ?string
+    protected function getSession(): ?string
     {
-        $value = $this->_getEnv($this->_config['sessionIdVar']);
+        $value = $this->getEnv($this->config['sessionIdVar']);
         return $value ? (string) $value : null;
     }
 
     /**
      * Returns the corresponding environment variable value.
      */
-    protected function _getEnv(string $index): ?string
+    protected function getEnv(string $index): ?string
     {
-        $index = $this->_config['attrPrefix'] . $index;
-        return isset($this->_env[$index])
-            ? (string) $this->_env[$index]
+        $index = $this->config['attrPrefix'] . $index;
+        return isset($this->env[$index])
+            ? (string) $this->env[$index]
             : null;
     }
 
@@ -290,10 +293,10 @@ class ShibbolethAdapter extends AbstractAdapter
      */
     protected function ldapRoleToLocalRole(): ?string
     {
-        $userAttrs = $this->_extractAttributes();
+        $userAttrs = $this->extractAttributes();
         $entry = \Net_LDAP2_Entry::createFresh('', $userAttrs);
 
-        foreach ($this->_config['production']['roles'] as $role => $ldapRole) {
+        foreach ($this->config['production']['roles'] as $role => $ldapRole) {
             $roleUser = \Net_LDAP2_Filter::parse($ldapRole);
             if ($roleUser
                 && is_a($roleUser, \Net_LDAP2_Filter::class)
