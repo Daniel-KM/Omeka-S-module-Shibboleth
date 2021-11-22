@@ -45,6 +45,8 @@ namespace Shibboleth\Authentication\Adapter;
 use Doctrine\ORM\EntityManager;
 use Laminas\Authentication\Adapter\AbstractAdapter;
 use Laminas\Authentication\Result;
+use Laminas\Http\PhpEnvironment\RemoteAddress;
+use Laminas\Log\Logger;
 use Omeka\Entity\User;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
@@ -55,6 +57,11 @@ class ShibbolethAdapter extends AbstractAdapter
      * @var EntityManager
      */
     protected $entityManager;
+
+    /**
+     * @var Logger
+     */
+    protected $logger;
 
     /**
      * The configuration array.
@@ -133,10 +140,12 @@ class ShibbolethAdapter extends AbstractAdapter
 
     public function __construct(
         EntityManager $entityManager,
+        Logger $logger = null,
         array $config = [],
         array $env = null
     ) {
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
         $this->config = $config + $this->defaultConfig;
         $this->env = $env ?: $_SERVER;
     }
@@ -161,19 +170,17 @@ class ShibbolethAdapter extends AbstractAdapter
         // Check if the "identityVar" is present. If not, the authentication
         // cannot be completed.
         if (!isset($userAttrs[$this->config['identityVar']])) {
-            return new Result(
-                Result::FAILURE_IDENTITY_NOT_FOUND,
-                null,
-                ['no_identity']
+            return $this->failureResult(
+                ['no_identity'],
+                Result::FAILURE_IDENTITY_NOT_FOUND
             );
         }
 
         // If the "identityVar" variable contains more than one value, throw an error.
         if (is_array($userAttrs[$this->config['identityVar']])) {
-            return new Result(
-                Result::FAILURE_IDENTITY_AMBIGUOUS,
-                null,
-                ['multiple_id_attr_value']
+            return $this->failureResult(
+                ['multiple_id_attr_value'],
+                Result::FAILURE_IDENTITY_AMBIGUOUS
             );
         }
 
@@ -221,12 +228,23 @@ class ShibbolethAdapter extends AbstractAdapter
         }
 
         // Return that the user does not have an active account.
-        return new Result(
-            Result::FAILURE_IDENTITY_NOT_FOUND,
-            null,
+        return $this->failureResult(
             // TODO Implement failure message translation.
-            [sprint('User matching "%s" not found.', $username)] // @translate
+            [sprint('User matching "%s" not found.', $username)], // @translate
+            Result::FAILURE_IDENTITY_NOT_FOUND
         );
+    }
+
+    /**
+     * Returns a failure Result.
+     */
+    protected function failureResult(array $messages, int $code = Result::FAILURE): Result
+    {
+        if ($this->logger) {
+            $ip = (new RemoteAddress())->getIpAddress();
+            $this->logger->info(sprintf('Failed login attempt from ip "%s".', $ip)); // @translate
+        }
+        return new Result($code, null, $messages);
     }
 
     /**
