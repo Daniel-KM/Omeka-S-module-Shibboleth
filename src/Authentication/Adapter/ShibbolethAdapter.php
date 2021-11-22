@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
+
+namespace Shibboleth\Authentication\Adapter;
+
 /**
- * Shibboleth authentication adapter for the Zend Framework.
+ * Shibboleth authentication adapter for Laminas (ex-Zend Framework).
  *
  * Configuration options:
  * - attrPrefix (string, default '') - apply prefix when retrieving Shibboleth attributes
@@ -33,21 +36,30 @@
  *
  *
  * @author Ivan Novakov <ivan.novakov@debug.cz>
+ * @author Daniel Berthereau <daniel.git@berthereau.net>
  * @license http://debug.cz/license/freebsd    FreeBSD License
  */
 // require_once 'Net/LDAP2/Entry.php';
 // require_once 'Net/LDAP2/Filter.php';
 
-require_once dirname(__FILE__) . '/../../../vendor/autoload.php';
+use Doctrine\ORM\EntityManager;
+use Laminas\Authentication\Adapter\AbstractAdapter;
+use Laminas\Authentication\Result;
+use Omeka\Entity\User;
 
-class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
+class ShibbolethAdapter extends AbstractAdapter
 {
     /**
-     * The configuration object.
-     *
-     * @var Zend_Config
+     * @var EntityManager
      */
-    protected $_config = null;
+    protected $entityManager;
+
+    /**
+     * The configuration array.
+     */
+    protected $_config = [];
 
     /**
      * Array of default options.
@@ -65,25 +77,36 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
         'identityVar' => 'uid',
         'systemVarsInResult' => true,
         'attrMap' => [
-            'uid' => 'username',
-            'cn' => 'name',
+            // Omeka S has a unique user name, but no public name.
+            'uid' => 'name',
+            'cn' => 'username',
             'mail' => 'email',
+            'memberOf' => 'memberOf',
         ],
         'production' => [
             'roles' => [
-                'super' => '',
-                'admin' => '',
-                'contributor' => '',
+                'global_admin' => '',
+                'site_admin' => '',
+                'editor' => '',
+                'reviewer' => '',
+                'author' => '',
                 'researcher' => '',
+                // These roles require modules.
+                'guest' => '',
+                'annotator' => '',
             ],
         ],
-        // TODO Roles in development is currently not managed.
+        // TODO Roles in development are currently not managed.
         'development' => [
             'roles' => [
-                'super' => '',
-                'admin' => '',
-                'contributor' => '',
+                'global_admin' => '',
+                'site_admin' => '',
+                'editor' => '',
+                'reviewer' => '',
+                'author' => '',
                 'researcher' => '',
+                'guest' => '',
+                'annotator' => '',
             ],
         ],
     ];
@@ -108,165 +131,124 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
      */
     protected $_env = [];
 
-    /**
-     * Constructor.
-     *
-     * @param array $config
-     * @param array $env
-     */
-    public function __construct(array $config = [], array $env = null)
+    public function __construct(EntityManager $entityManager, array $config = [], array $env = null)
     {
-        $this->_config = new Zend_Config($config + $this->_defaultOptions);
-        if (!$env) {
-            $env = $_SERVER;
-        }
-        $this->_env = $env;
+        $this->entityManager = $entityManager;
+        $this->_config = $config + $this->_defaultOptions;
+        $this->_env = $env ?: $_SERVER;
     }
 
     /**
-     * Implementation of the authenticate() call defineed by the adapter interface.
-     *
-     * @see Zend_Auth_Adapter_Interface::authenticate()
+     * @inheritdoc \Laminas\Authentication\Adapter\AdapterInterface::authenticate()
      */
     public function authenticate()
     {
-        /*
-         * If there is no Shibboleth session, the authentication is impossible.
-         */
-        if (! $this->_isSession()) {
-            return $this->_failureResult([
-                'no_session',
-            ]);
+        // If there is no Shibboleth session, the authentication is impossible.
+        if (!$this->_isSession()) {
+            return new Result(
+                Result::FAILURE_UNCATEGORIZED,
+                null,
+                ['no_session']
+            );
         }
 
-        /*
-         * Get attributes from the Shibboleth session.
-         */
+        // Get attributes from the Shibboleth session.
         $userAttrs = $this->_extractAttributes();
 
-        /*
-         * Check if the "identityVar" is present. If not, the authentication cannot be completed.
-         */
-
-        if (! isset($userAttrs[$this->_config->identityVar])) {
-            return $this->_failureResult([
-                'no_identity',
-            ], Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND);
+        // Check if the "identityVar" is present. If not, the authentication
+        // cannot be completed.
+        if (!isset($userAttrs[$this->_config['identityVar']])) {
+            return new Result(
+                Result::FAILURE_IDENTITY_NOT_FOUND,
+                null,
+                ['no_identity']
+            );
         }
 
-        /*
-         * If the "identityVar" variable contains more than one value, throw an error.
-         */
-        if (is_array($userAttrs[$this->_config->identityVar])) {
-            return $this->_failureResult([
-                'multiple_id_attr_value',
-            ], Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS);
+        // If the "identityVar" variable contains more than one value, throw an error.
+        if (is_array($userAttrs[$this->_config['identityVar']])) {
+            return new Result(
+                Result::FAILURE_IDENTITY_AMBIGUOUS,
+                null,
+                ['multiple_id_attr_value']
+            );
         }
 
         // Find user by the specified identifier (generally uid or email).
-        $username = $userAttrs[$this->_config->identityVar];
-        $user = get_db()->getTable('User')->findBySql(
-            'username = ?',
-            [$username],
-            true
-        );
+        // In Omeka S, there is no username, only an email and a display name.
+        $email = $userAttrs[$this->_config['identityVar']];
+        $user = $this->entityManager->getRepository(\Omeka\Entity\User::class)
+            ->findOneBy([
+                'email' => $email,
+            ]);
 
-        $role = $this->_updateRole();
+        $role = $this->ldapRoleToLocalRole();
 
         if ($user) {
-            // If user was found update his role in all cases.
+            // If a user was found, update the role in all cases.
             if ($role) {
-                $user->role = $role;
+                $user->setRole($role);
             }
             // Deactivate user if already existing but does not have a role anymore.
             else {
-                $user->active = false;
+                $user->setIsActive(false);
             }
-            $user->save(false);
         }
         // Else create and activate a user, if there is a role.
         elseif ($role) {
             $user = new User();
-            $user->username = $username;
-            $user->name = $userAttrs['name'];
-            $user->email = $userAttrs['email'];
-            $user->role = $role;
-            $user->active = true;
-            $user->save(false);
+            $user->setName($userAttrs['name']);
+            $user->setEmail($email);
+            $user->setRole($role);
+            $user->setIsActive(true);
+        }
+
+        if ($user) {
+            // The entity manager didn't use rights.
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
         }
 
         // If the user was found and active, return success.
-        if ($user && $user->active) {
-            return new Zend_Auth_Result(
-                Zend_Auth_Result::SUCCESS,
-                $user->id
+        if ($user && $user->isActive()) {
+            return new Result(
+                Result::SUCCESS,
+                $user
             );
         }
 
         // Return that the user does not have an active account.
-        return new Zend_Auth_Result(
-            Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND,
-            $username,
-            [__('User matching "%s" not found.', $username)]
+        return new Result(
+            Result::FAILURE_IDENTITY_NOT_FOUND,
+            null,
+            // TODO Implement failure message translation.
+            [sprint('User matching "%s" not found.', $username)] // @translate
         );
     }
 
     /**
-     * Returns a failure Zend_Auth_Result.
-     *
-     * @param array $messages
-     * @param int $code
-     * @return Zend_Auth_Result
-     */
-    protected function _failureResult(array $messages, $code = Zend_Auth_Result::FAILURE)
-    {
-        return new Zend_Auth_Result($code, null, $messages);
-    }
-
-    /**
-     * Returns a successful Zend_Auth_Result.
-     *
-     * @param array $userAttrs
-     * @return Zend_Auth_Result
-     */
-    protected function _successResult(array $userAttrs)
-    {
-        return new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $userAttrs);
-    }
-
-    /**
      * Parses Shibboleth attributes and maps them into an array.
-     *
-     * @return array
      */
-    protected function _extractAttributes()
+    protected function _extractAttributes(): array
     {
         $attrs = [];
 
-        /*
-         * Use the "attrMap" configuration parameter to map attributes.
-         */
-        foreach ($this->_config->attrMap->toArray() as $srcIndex => $dstIndex) {
+        // Use the "attrMap" configuration parameter to map attributes.
+        foreach ($this->_config['attrMap'] as $srcIndex => $dstIndex) {
             if ($value = $this->_getEnv($srcIndex)) {
-                /*
-                 * Some Shibboleth attributes have multiple values, serialized.
-                 * The only way to find that out is to try to split the values by separator.
-                 */
-                $values = explode($this->_config->attrValueSeparator, $value);
-                if (count($values) > 1) {
-                    $attrs[$dstIndex] = $values;
-                } else {
-                    $attrs[$dstIndex] = $value;
-                }
+                // Some Shibboleth attributes have multiple values, serialized.
+                // The only way to find that out is to try to split the values by separator.
+                $values = explode($this->_config['attrValueSeparator'], $value);
+                $attrs[$dstIndex] = count($values) <= 1
+                    ? $value
+                    : $values;
             }
         }
 
-        /*
-         * Add relevant environment variables to the array.
-         */
-        if ($this->_config->systemVarsInResult) {
+        // Add relevant environment variables to the array.
+        if ($this->_config['systemVarsInResult']) {
             foreach ($this->_systemVars as $systemVarName) {
-                $envVarName = $this->_config->get($systemVarName);
+                $envVarName = $this->_config[$systemVarName] ?? null;
                 if ($envVarName && ($value = $this->_getEnv($envVarName))) {
                     $attrs['env'][$envVarName] = $value;
                 }
@@ -278,64 +260,49 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
 
     /**
      * Returns true, if a Shibboleth session exists.
-     *
-     * @return bool
      */
-    protected function _isSession()
+    protected function _isSession(): bool
     {
-        return ($this->_getSession());
+        return (bool) $this->_getSession();
     }
 
     /**
      * Returns the Shibboleth session ID, if present. Otherwise returns NULL.
-     *
-     * @return string|NULL
      */
-    protected function _getSession()
+    protected function _getSession(): ?string
     {
-        return $this->_getEnv($this->_config->sessionIdVar);
+        $value = $this->_getEnv($this->_config['sessionIdVar']);
+        return $value ? (string) $value : null;
     }
+
     /**
      * Returns the corresponding environment variable value.
-     *
-     * @param string $index
-     * @return string|NULL
      */
-    protected function _getEnv($index)
+    protected function _getEnv(string $index): ?string
     {
-        $index = $this->_config->attrPrefix . $index;
+        $index = $this->_config['attrPrefix'] . $index;
+        return isset($this->_env[$index])
+            ? (string) $this->_env[$index]
+            : null;
+    }
 
-        if (isset($this->_env[$index])) {
-            return $this->_env[$index];
+    /**
+     */
+    protected function ldapRoleToLocalRole(): ?string
+    {
+        $userAttrs = $this->_extractAttributes();
+        $entry = \Net_LDAP2_Entry::createFresh('', $userAttrs);
+
+        foreach ($this->_config['production']['roles'] as $role => $ldapRole) {
+            $roleUser = \Net_LDAP2_Filter::parse($ldapRole);
+            if ($roleUser
+                && is_a($roleUser, \Net_LDAP2_Filter::class)
+                && $roleUser->matches($entry)
+            ) {
+                return $role;
+            }
         }
 
         return null;
-    }
-
-    protected function _updateRole()
-    {
-        $roles = $this->_config->production->roles;
-
-        $roleSuper = Net_LDAP2_Filter::parse($roles->super);
-        $roleAdmin = Net_LDAP2_Filter::parse($roles->admin);
-        $roleContributor = Net_LDAP2_Filter::parse($roles->contributor);
-        $roleResearcher = Net_LDAP2_Filter::parse($roles->researcher);
-
-        $userAttrs = $this->_extractAttributes();
-        $entry = Net_LDAP2_Entry::createFresh('', $userAttrs);
-
-        $role = '';
-
-        if (is_a($roleSuper, 'Net_LDAP2_Filter') && $roleSuper->matches($entry)) {
-            $role = 'super';
-        } elseif (is_a($roleAdmin, 'Net_LDAP2_Filter') && $roleAdmin->matches($entry)) {
-            $role = 'admin';
-        } elseif (is_a($roleContributor, 'Net_LDAP2_Filter') && $roleContributor->matches($entry)) {
-            $role = 'contributor';
-        } elseif (is_a($roleResearcher, 'Net_LDAP2_Filter') && $roleResearcher->matches($entry)) {
-            $role = 'researcher';
-        }
-
-        return $role;
     }
 }
