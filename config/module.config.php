@@ -3,6 +3,11 @@
 namespace Shibboleth;
 
 return [
+    'controllers' => [
+        'factories' => [
+            'Omeka\Controller\Login' => Service\Controller\LoginControllerFactory::class,
+        ],
+    ],
     'service_manager' => [
         'factories' => [
             'Omeka\AuthenticationService' => Service\AuthenticationServiceFactory::class,
@@ -12,8 +17,10 @@ return [
     'shibboleth' => [
         // This option can be skipped.
         'config' => [
-            // Set true if you don't want user accounts managed by Omeka inside database.
-            'shibboleth_only' => false,
+            // Set true if you want to use user accounts managed by Omeka.
+            // This option requires a special login page.
+            'shibboleth_password_login' => false,
+            'shibboleth_url_logout' => '/Shibboleth.sso/Logout',
         ],
         'params' => [
             'attrPrefix' => '',
