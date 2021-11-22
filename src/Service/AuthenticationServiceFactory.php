@@ -46,9 +46,8 @@ class AuthenticationServiceFactory implements FactoryInterface
             } else {
                 // Authenticate using user/password for all other requests.
                 $storage = new DoctrineWrapper(new Session, $userRepository);
-                $reader = new Laminas\Config\Reader\Ini();
-                $shibbolethConfig = $reader->fromFile(OMEKA_PATH . '/config/shibboleth.ini');
-                $adapter = new ShibbolethAdapter($entityManager, $shibbolethConfig, null);
+                $shibbolethParams = $serviceLocator->get('Config')['shibboleth']['params'];
+                $adapter = new ShibbolethAdapter($entityManager, $shibbolethParams, null);
             }
         }
 

@@ -78,19 +78,14 @@ class Module extends AbstractModule
             ));
         }
 
-        $filename = OMEKA_PATH . '/config/shibboleth.ini';
-        if (!file_exists($filename)) {
+        // The local config should be different from the default config.
+        $currentConfig = include OMEKA_PATH . '/config/local.config.php';
+        $defaultConfig = include __DIR__ . '/config/module.config.php';
+        if (empty($currentConfig['shibboleth']['params'])
+            || $currentConfig['shibboleth']['params'] === $defaultConfig['shibboleth']['params']
+        ) {
             throw new ModuleCannotInstallException((string) new \Omeka\Stdlib\Message(
-                'The module Shibboleth requires the file "shibboleth.ini" in the main config dir of Omeka to make the connection with the ldap. See %s.', // @translate
-                'https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation'
-            ));
-        }
-
-        $a = file_get_contents($filename);
-        $b = file_get_contents(__DIR__ . '/config/shibboleth.ini');
-        if ($a === $b) {
-            throw new ModuleCannotInstallException((string) new \Omeka\Stdlib\Message(
-                'The module Shibboleth requires the file "shibboleth.ini" to be adapted to your ldap. See %s.', // @translate
+                'The module Shibboleth requires the Omeka config in "config/local.config.php" to be adapted to your ldap. See %s.', // @translate
                 'https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation'
             ));
         }
