@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Shibboleth Plugin
@@ -16,33 +16,33 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
     /**
      * @var array This plugin's hooks.
      */
-    protected $_hooks = array(
+    protected $_hooks = [
         'install',
         'uninstall',
         'config',
         'config_form',
         'define_routes',
-    );
+    ];
 
     /**
      * @var array This plugin's filters.
      */
-    protected $_filters = array(
+    protected $_filters = [
         'admin_whitelist',
         'admin_navigation_users',
-    );
+    ];
 
     /**
      * @var array This plugin's options.
      */
-    protected $_options = array(
+    protected $_options = [
         'shibboleth_display_email' => false,
-    );
+    ];
 
     /**
      * Installs the plugin.
      */
-    public function hookInstall()
+    public function hookInstall(): void
     {
         if (!extension_loaded('ldap')) {
             throw new Omeka_Plugin_Installer_Exception(__(
@@ -90,7 +90,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
     /**
      * Uninstalls the plugin.
      */
-    public function hookUninstall()
+    public function hookUninstall(): void
     {
         $this->_uninstallOptions();
     }
@@ -98,7 +98,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
     /**
      * Shows plugin configuration page.
      */
-    public function hookConfigForm($args)
+    public function hookConfigForm($args): void
     {
         $view = get_view();
         echo $view->partial('plugins/shibboleth-config-form.php');
@@ -109,7 +109,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
      *
      * @param array Options set in the config form.
      */
-    public function hookConfig($args)
+    public function hookConfig($args): void
     {
         $post = $args['post'];
         foreach ($this->_options as $optionKey => $defaultValue) {
@@ -127,7 +127,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
      *
      * @param array $args
      */
-    public function hookDefineRoutes($args)
+    public function hookDefineRoutes($args): void
     {
         /** @var Zend_Controller_Router_Abstract $router */
         $router = $args['router'];
@@ -137,25 +137,25 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
                 'shibboleth_id',
                 new Zend_Controller_Router_Route(
                     'users/:action/:id',
-                    array(
+                    [
                         'module' => 'shibboleth',
                         'controller' => 'users',
                         'action' => 'index',
-                    ),
-                    array(
+                    ],
+                    [
                         'id' => '\d+',
-                    )
+                    ]
                 )
             )
             ->addRoute(
                 'shibboleth',
                 new Zend_Controller_Router_Route(
                     'users/:action',
-                    array(
+                    [
                         'module' => 'shibboleth',
                         'controller' => 'users',
                         'action' => 'index',
-                    )
+                    ]
                 )
             );
     }
@@ -166,11 +166,11 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function filterAdminWhitelist($adminWhitelist)
     {
-        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'activate');
-        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'login');
-        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'forgot-password');
-        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'notify');
-        $adminWhitelist[] = array('module' => 'shibboleth', 'controller' => 'users', 'action' => 'error');
+        $adminWhitelist[] = ['module' => 'shibboleth', 'controller' => 'users', 'action' => 'activate'];
+        $adminWhitelist[] = ['module' => 'shibboleth', 'controller' => 'users', 'action' => 'login'];
+        $adminWhitelist[] = ['module' => 'shibboleth', 'controller' => 'users', 'action' => 'forgot-password'];
+        $adminWhitelist[] = ['module' => 'shibboleth', 'controller' => 'users', 'action' => 'notify'];
+        $adminWhitelist[] = ['module' => 'shibboleth', 'controller' => 'users', 'action' => 'error'];
         return $adminWhitelist;
     }
 

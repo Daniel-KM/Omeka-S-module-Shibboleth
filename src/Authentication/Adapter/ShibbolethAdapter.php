@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Shibboleth authentication adapter for the Zend Framework.
  *
@@ -54,7 +54,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
      *
      * @var array
      */
-    protected $_defaultOptions = array(
+    protected $_defaultOptions = [
         'attrPrefix' => '',
         'attrValueSeparator' => ';',
         'sessionIdVar' => 'Shib-Session-ID',
@@ -64,49 +64,49 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
         'authContextVar' => 'Shib-AuthnContext-Decl',
         'identityVar' => 'uid',
         'systemVarsInResult' => true,
-        'attrMap' => array(
+        'attrMap' => [
             'uid' => 'username',
             'cn' => 'name',
             'mail' => 'email',
-        ),
-        'production' => array(
-            'roles' => array(
+        ],
+        'production' => [
+            'roles' => [
                 'super' => '',
                 'admin' => '',
                 'contributor' => '',
                 'researcher' => '',
-            ),
-        ),
+            ],
+        ],
         // TODO Roles in development is currently not managed.
-        'development' => array(
-            'roles' => array(
+        'development' => [
+            'roles' => [
                 'super' => '',
                 'admin' => '',
                 'contributor' => '',
                 'researcher' => '',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     /**
      * System variable keys.
      *
      * @var array
      */
-    protected $_systemVars = array(
+    protected $_systemVars = [
         'idpVar',
         'appIdpVar',
         'authIdVar',
         'authInstantVar',
         'authContextVar',
-    );
+    ];
 
     /**
      * Array containing environment variables.
      *
      * @var array
      */
-    protected $_env = array();
+    protected $_env = [];
 
     /**
      * Constructor.
@@ -114,7 +114,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
      * @param array $config
      * @param array $env
      */
-    public function __construct(array $config = array(), array $env = null)
+    public function __construct(array $config = [], array $env = null)
     {
         $this->_config = new Zend_Config($config + $this->_defaultOptions);
         if (!$env) {
@@ -134,9 +134,9 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
          * If there is no Shibboleth session, the authentication is impossible.
          */
         if (! $this->_isSession()) {
-            return $this->_failureResult(array(
+            return $this->_failureResult([
                 'no_session',
-            ));
+            ]);
         }
 
         /*
@@ -149,25 +149,25 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
          */
 
         if (! isset($userAttrs[$this->_config->identityVar])) {
-            return $this->_failureResult(array(
+            return $this->_failureResult([
                 'no_identity',
-            ), Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND);
+            ], Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND);
         }
 
         /*
          * If the "identityVar" variable contains more than one value, throw an error.
          */
         if (is_array($userAttrs[$this->_config->identityVar])) {
-            return $this->_failureResult(array(
+            return $this->_failureResult([
                 'multiple_id_attr_value',
-            ), Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS);
+            ], Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS);
         }
 
         // Find user by the specified identifier (generally uid or email).
         $username = $userAttrs[$this->_config->identityVar];
         $user = get_db()->getTable('User')->findBySql(
             'username = ?',
-            array($username),
+            [$username],
             true
         );
 
@@ -207,7 +207,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
         return new Zend_Auth_Result(
             Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND,
             $username,
-            array(__('User matching "%s" not found.', $username))
+            [__('User matching "%s" not found.', $username)]
         );
     }
 
@@ -241,7 +241,7 @@ class ShibbolethAdapter implements Zend_Auth_Adapter_Interface
      */
     protected function _extractAttributes()
     {
-        $attrs = array();
+        $attrs = [];
 
         /*
          * Use the "attrMap" configuration parameter to map attributes.

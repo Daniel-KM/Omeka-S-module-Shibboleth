@@ -1,14 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @var Omeka_View $this
  * @var User[] $users
  * @var int $total_results
  */
-
 $displayEmail = get_option('shibboleth_display_email');
 
 $pageTitle = __('Browse Users') . ' ' . __('(%s total)', $total_results);
-echo head(array('title' => $pageTitle, 'bodyclass' => 'users'));
+echo head(['title' => $pageTitle, 'bodyclass' => 'users']);
 echo flash();
 ?>
 
@@ -33,8 +32,7 @@ echo flash();
                         case "email":
                             echo __("Email") . ': ';
                         break;
-                    }
-        else:
+                    } else:
             echo __("Name") . ': ';
         endif;
         ?>
@@ -62,26 +60,32 @@ echo flash();
     <thead>
         <tr>
         <?php if ($displayEmail): ?>
-        <?php $sortLinks = array(
+        <?php $sortLinks = [
                 __('Username') => 'username',
                 __('Display Name') => 'name',
                 __('Email') => 'email',
                 __('Role') => 'role',
-                );
+                ];
         else:
-            $sortLinks = array(
+            $sortLinks = [
                 __('Display Name') => 'name',
                 __('Role') => 'role',
-            );
+            ];
         endif;
         ?>
 
-        <?php echo browse_sort_links($sortLinks, array('link_tag' => 'th scope="col"', 'list_tag' => '')); ?>
+        <?php echo browse_sort_links($sortLinks, ['link_tag' => 'th scope="col"', 'list_tag' => '']); ?>
         </tr>
     </thead>
     <tbody>
     <?php foreach ($users as $key => $user): ?>
-        <tr class="<?php if (current_user()->id == $user->id) echo 'current-user '; ?><?php if($key%2==1) echo 'even'; else echo 'odd'; ?><?php if(!$user->active): ?> inactive<?php endif; ?>">
+        <tr class="<?php if (current_user()->id == $user->id) {
+            echo 'current-user ';
+        } ?><?php if ($key % 2 == 1) {
+            echo 'even';
+        } else {
+            echo 'odd';
+        } ?><?php if (!$user->active): ?> inactive<?php endif; ?>">
             <?php if ($displayEmail): ?>
             <td>
             <?php echo html_escape($user->username); ?> <?php if (!$user->active): ?>(<?php echo __('inactive'); ?>)<?php endif; ?>
@@ -95,7 +99,7 @@ echo flash();
                 <?php endif; ?>
             </ul>
 */ ?>
-            <?php fire_plugin_hook('admin_users_browse_each', array('user' => $user, 'view' => $this)); ?>
+            <?php fire_plugin_hook('admin_users_browse_each', ['user' => $user, 'view' => $this]); ?>
            </td>
            <?php endif; ?>
             <td><?php echo html_escape($user->name); ?></td>
@@ -108,5 +112,5 @@ echo flash();
     </tbody>
 </table>
 <?php echo pagination_links(); ?>
-<?php fire_plugin_hook('admin_users_browse', array('users' => $users, 'view' => $this)); ?>
+<?php fire_plugin_hook('admin_users_browse', ['users' => $users, 'view' => $this]); ?>
 <?php echo foot();?>

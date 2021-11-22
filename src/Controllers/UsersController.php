@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 if (!class_exists('UsersController')) {
     require_once CONTROLLER_DIR . '/UsersController.php';
@@ -6,44 +6,44 @@ if (!class_exists('UsersController')) {
 
 class Shibboleth_UsersController extends UsersController
 {
-    public function forgotPasswordAction()
+    public function forgotPasswordAction(): void
     {
         // Disable forgotAction as users are created at log in with Shibboleth.
         throw new Omeka_Controller_Exception_404();
     }
 
-    public function activateAction()
+    public function activateAction(): void
     {
         // Disable activateAction as users are activated with Shibboleth.
         throw new Omeka_Controller_Exception_404();
     }
 
-    public function addAction()
+    public function addAction(): void
     {
         // Disable addAction as users are now created at log in with Shibboleth.
         throw new Omeka_Controller_Exception_404();
     }
 
-    public function editAction()
+    public function editAction(): void
     {
         // Disable editAction as users are now edited with Shibboleth.
         // But keep the action, since it's enabled by default in the admin bar.
         $this->forward('show');
     }
 
-    public function changePasswordAction()
+    public function changePasswordAction(): void
     {
         // Disable changePasswordAction as password is managed by Shibboleth.
         throw new Omeka_Controller_Exception_404();
     }
 
-    public function deleteAction()
+    public function deleteAction(): void
     {
         // Disable deleteAction as users are now managed with Shibboleth.
         throw new Omeka_Controller_Exception_404();
     }
 
-    public function loginAction()
+    public function loginAction(): void
     {
         $this->_helper->viewRenderer->setNoRender();
         require_once dirname(__FILE__) . '/../libraries/Shibboleth/adapters/ShibbolethAdapter.php';
@@ -72,12 +72,12 @@ class Shibboleth_UsersController extends UsersController
         }
     }
 
-    public function logoutAction()
+    public function logoutAction(): void
     {
         $auth = $this->_auth;
         //http://framework.zend.com/manual/en/zend.auth.html
         $auth->clearIdentity();
-        $_SESSION = array();
+        $_SESSION = [];
         Zend_Session::destroy();
         $this->_helper->redirector->gotoUrl(WEB_ROOT . '/Shibboleth.sso/Logout?return=' . WEB_ROOT);
     }

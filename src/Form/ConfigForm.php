@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @var Omeka_View $this
  */
@@ -10,7 +10,7 @@
             <?php echo $this->formLabel('shibboleth_display_email', __('Display user email in users pages')); ?>
         </div>
         <div class='inputs five columns omega'>
-            <?php echo $this->formCheckbox('shibboleth_display_email', true, array('checked' => (bool) get_option('shibboleth_display_email'))); ?>
+            <?php echo $this->formCheckbox('shibboleth_display_email', true, ['checked' => (bool) get_option('shibboleth_display_email')]); ?>
         </div>
     </div>
 </fieldset>
