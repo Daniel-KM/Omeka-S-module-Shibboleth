@@ -47,7 +47,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
         if (!extension_loaded('ldap')) {
             throw new Omeka_Plugin_Installer_Exception(__(
                 'The plugin Shibboleth requires the php extension "ldap" to be installed. See %s.',
-                'https://github.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
+                'https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
             ));
         }
 
@@ -55,7 +55,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
         if (!file_exists($filename)) {
             throw new Omeka_Plugin_Installer_Exception(__(
                 'The plugin Shibboleth requires to be installed with composer or extracted from a release. See %s.',
-                'https://github.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
+                'https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
             ));
         }
 
@@ -63,7 +63,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
         if (!class_exists('Net_LDAP2_Filter') || !class_exists('Net_LDAP2_Entry')) {
             throw new Omeka_Plugin_Installer_Exception(__(
                 'The plugin Shibboleth requires the composer package "pear/neet_ldap2" to be installed. See %s.',
-                'https://github.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
+                'https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
             ));
         }
 
@@ -71,7 +71,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
         if (!file_exists($filename)) {
             throw new Omeka_Plugin_Installer_Exception(__(
                 'The plugin Shibboleth requires the file "shibboleth.ini" in the main config dir of Omeka to make the connection with the ldap. See %s.',
-                'https://github.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
+                'https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
             ));
         }
 
@@ -80,7 +80,7 @@ class ShibbolethPlugin extends Omeka_Plugin_AbstractPlugin
         if ($a === $b) {
             throw new Omeka_Plugin_Installer_Exception(__(
                 'The plugin Shibboleth requires the file "shibboleth.ini" to be adapted to your ldap. See %s.',
-                'https://github.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
+                'https://gitlab.com/Daniel-KM/Omeka-plugin-Shibboleth#installation'
             ));
         }
 
