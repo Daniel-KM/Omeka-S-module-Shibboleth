@@ -2,7 +2,7 @@
 
 namespace Shibboleth\Authentication\Adapter;
 
-/**
+/*
  * Shibboleth authentication adapter for Laminas (ex-Zend Framework).
  *
  * Configuration options:

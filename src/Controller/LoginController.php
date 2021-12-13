@@ -12,7 +12,7 @@ class LoginController extends \Omeka\Controller\LoginController
         if ($user) {
             return $user->getRole() === 'guest'
                 ? $this->redirect()->toRoute('top')
-                :  $this->redirect()->toRoute('admin');
+                : $this->redirect()->toRoute('admin');
         }
 
         $sessionManager = Container::getDefaultManager();
@@ -21,7 +21,7 @@ class LoginController extends \Omeka\Controller\LoginController
         $result = $this->auth->authenticate();
         if (!$result->isValid()) {
             $message = reset($result->getMessages());
-            if  (reset($message)) {
+            if (reset($message)) {
                 $this->messenger()->addError(sprintf('Error during authentication: %s', $message)); // @translate
             } else {
                 $this->messenger()->addError('Error during authentication'); // @translate

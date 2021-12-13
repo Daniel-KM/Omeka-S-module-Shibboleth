@@ -3,11 +3,10 @@
 namespace Shibboleth\Service;
 
 use Interop\Container\ContainerInterface;
-use Laminas\Authentication\AuthenticationService;
 use Laminas\Authentication\Adapter\Callback;
+use Laminas\Authentication\AuthenticationService;
 use Laminas\Authentication\Storage\NonPersistent;
 use Laminas\Authentication\Storage\Session;
-use Laminas\Config\Reader\Ini;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Omeka\Authentication\Adapter\KeyAdapter;
 use Omeka\Authentication\Storage\DoctrineWrapper;
