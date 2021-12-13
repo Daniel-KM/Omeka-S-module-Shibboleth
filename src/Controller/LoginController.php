@@ -30,15 +30,20 @@ class LoginController extends \Omeka\Controller\LoginController
             return $this->redirect()->toRoute('top');
         }
 
+        $user = $this->auth->getIdentity();
+
         $this->messenger()->addSuccess('Successfully logged in'); // @translate
         $eventManager = $this->getEventManager();
-        $eventManager->trigger('user.login', $this->auth->getIdentity());
+        $eventManager->trigger('user.login', $user);
         $session = $sessionManager->getStorage();
 
         if ($redirectUrl = $session->offsetGet('redirect_url')) {
             return $this->redirect()->toUrl($redirectUrl);
         }
-        return $this->redirect()->toRoute('admin');
+
+        return $user->getRole() === 'guest'
+            ? $this->redirect()->toRoute('top')
+            : $this->redirect()->toRoute('admin');
     }
 
     public function logoutAction()
