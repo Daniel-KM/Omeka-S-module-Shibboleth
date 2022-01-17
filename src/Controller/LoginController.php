@@ -20,8 +20,9 @@ class LoginController extends \Omeka\Controller\LoginController
 
         $result = $this->auth->authenticate();
         if (!$result->isValid()) {
-            $message = reset($result->getMessages());
-            if (reset($message)) {
+            $message = $result->getMessages();
+            if ($message) {
+                $message = is_array($message) ? reset($message) : $message;
                 $this->messenger()->addError(sprintf('Error during authentication: %s', $message)); // @translate
             } else {
                 $this->messenger()->addError('Error during authentication'); // @translate
