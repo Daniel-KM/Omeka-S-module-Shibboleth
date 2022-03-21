@@ -44,6 +44,9 @@ return [
                 // 'memberOf' => 'memberOf',
                 // 'supannEtablissement' => 'userprofile_institution_id',
             ],
+            // When the role is not found, use a default role.
+            // It should be null or "guest" for security.
+            'role_default' => null,
             'production' => [
                 'roles' => [
                     'global_admin' => '(memberOf=*xxx-global_admin*)',

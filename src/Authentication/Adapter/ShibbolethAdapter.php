@@ -97,6 +97,9 @@ class ShibbolethAdapter extends AbstractAdapter
             // 'memberOf' => 'memberOf',
             // 'supannEtablissement' => 'userprofile_institution_id',
         ],
+        // When the role is not found, use a default role.
+        // It should be null or "guest" for security.
+        'role_default' => null,
         'production' => [
             'roles' => [
                 'global_admin' => '',
@@ -216,6 +219,10 @@ class ShibbolethAdapter extends AbstractAdapter
             ]);
 
         $role = $this->ldapRoleToLocalRole();
+
+        if (!$role && !empty($this->config['role_default'])) {
+            $role = $this->config['role_default'];
+        }
 
         if ($user) {
             // If a user was found, update the role in all cases.
