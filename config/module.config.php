@@ -19,6 +19,7 @@ return [
         'config' => [
             // Set true if you want to use user accounts managed by Omeka.
             // This option requires a special login page.
+            // TODO Use the same login page (login form) for shibboleth and password.
             'shibboleth_password_login' => false,
             'shibboleth_url_logout' => '/Shibboleth.sso/Logout',
         ],
@@ -30,14 +31,17 @@ return [
             'appIdVar' => 'Shib-Application-ID',
             'authInstantVar' => 'Shib-Authentication-Instant',
             'authContextVar' => 'Shib-AuthnContext-Decl',
-            'identityVar' => 'uid',
+            // This is the mapped attribute, not the Shibboleth one.
+            // So here, `email` is mapped from `mail`.
+            // 'identityVar' => 'uid',
+            'identityVar' => 'email',
             'systemVarsInResult' => true,
             'attrMap' => [
-                // Omeka S has a unique user name, but no public name.
-                'uid' => 'name',
-                'cn' => 'username',
+                // Omeka S has a single name and no unique user name.
+                // 'uid' => 'name',
+                'cn' => 'name',
                 'mail' => 'email',
-                'memberOf' => 'memberOf',
+                // 'memberOf' => 'memberOf',
             ],
             'production' => [
                 'roles' => [

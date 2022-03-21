@@ -82,12 +82,16 @@ class ShibbolethAdapter extends AbstractAdapter
         'appIdVar' => 'Shib-Application-ID',
         'authInstantVar' => 'Shib-Authentication-Instant',
         'authContextVar' => 'Shib-AuthnContext-Decl',
-        'identityVar' => 'uid',
+        // This is the mapped attribute, not the Shibboleth one.
+        // So here, `email` is mapped from `mail`.
+        // 'identityVar' => 'uid',
+        'identityVar' => 'email',
         'systemVarsInResult' => true,
         'attrMap' => [
-            // Omeka S has a unique user name, but no public name.
-            'uid' => 'name',
-            'cn' => 'username',
+            // Omeka S has a single name and no unique user name.
+            // 'uid' => 'name',
+            // 'displayName' => 'name',
+            'cn' => 'name',
             'mail' => 'email',
             'memberOf' => 'memberOf',
         ],
