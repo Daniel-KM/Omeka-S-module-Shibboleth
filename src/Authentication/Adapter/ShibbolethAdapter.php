@@ -100,6 +100,10 @@ class ShibbolethAdapter extends AbstractAdapter
         // When the role is not found, use a default role.
         // It should be null or "guest" for security.
         'role_default' => null,
+        // Update the role of the user on connection.
+        // Warning, if the mapping has an issue and if there is no default
+        // role, the user will be deactivated, even admins.
+        'role_update' => false,
         'production' => [
             'roles' => [
                 'global_admin' => '',
@@ -225,13 +229,15 @@ class ShibbolethAdapter extends AbstractAdapter
         }
 
         if ($user) {
-            // If a user was found, update the role in all cases.
-            if ($role) {
-                $user->setRole($role);
-            }
-            // Deactivate user if already existing but does not have a role anymore.
-            else {
-                $user->setIsActive(false);
+            // If a user was found, update the role if specified.
+            if (!empty($this->config['role_update'])) {
+                if ($role) {
+                    $user->setRole($role);
+                }
+                // Deactivate user if already existing but does not have a role anymore.
+                else {
+                    $user->setIsActive(false);
+                }
             }
         }
         // Else create and activate a user, if there is a role.

@@ -47,6 +47,10 @@ return [
             // When the role is not found, use a default role.
             // It should be null or "guest" for security.
             'role_default' => null,
+            // Update the role of the user on connection.
+            // Warning, if the mapping has an issue and if there is no default
+            // role, the user will be deactivated, even admins.
+            'role_update' => false,
             'production' => [
                 'roles' => [
                     'global_admin' => '(memberOf=*xxx-global_admin*)',
