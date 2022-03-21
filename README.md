@@ -42,31 +42,42 @@ See general end user documentation for [installing a module].
 Usage
 -----
 
-Copy the array `[shibboleth]` from the config of the module to the local config
+Copy the array [shibboleth] from the config of the module to the local config
 of Omeka (file `config/local.config.php`) and adapt it to your network config.
 
 In particular, the attribute map may be modified to get the good username. The
 roles specified inside your Ldap must be mapped to the ones uses by Omeka too.
-Generally, just replace the `xxx` by the ones used in your ldap manager.
+Generally, just replace the `xxx` by the ones used in your ldap manager. The
+key `identityVar` may be updated to `uid` if the service doesn't provide the
+`email`. The only required value is the `email`.
+
+You can add user settings too, for example the institution or keys for the
+module [User Profile] (`'supannEtablissement' => 'userprofile_institution_id'`).
+All keys starting with `userprofile_` or in the specified list `user_settings`
+will be stored when the user will be created (no update later).
 
 Before moving into production, check the security and check the rights of each
-roles.
+role.
 
 Don’t forget to enable Shibboleth in the param of the web server (Apache here),
 according to your own configuration:
 
 ```
+# Location / should be first in order to manage specific settings for sub-paths.
 <Location />
     AuthType shibboleth
     ShibRequireSession Off
-    require shibboleth
+    # ShibRequestSetting entityIDSelf https://example.com/Shibboleth.sso
+    Require shibboleth
 </Location>
 
+# When using module Guest, you may add /s/my-site/guest like /admin.
 <Location /admin>
     AuthType shibboleth
     ShibRequireSession On
     ShibUseHeaders On
     ShibRequestSetting requireSession 1
+    # ShibRequestSetting entityIDSelf https://example.com/Shibboleth.sso
     Require valid-user
 </Location>
 
@@ -147,6 +158,7 @@ First developed for the [Nubis] of [Université Paris 1 - Panthéon-Sorbonne].
 [composer]: https://getcomposer.org
 [Shibboleth.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/releases
 [installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
+[shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/blob/master/config/module.config.php#L16-56
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/issues
 [PEAR Net_LDAP2]: https://pear.php.net/package/Net_LDAP2
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
