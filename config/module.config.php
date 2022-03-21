@@ -42,6 +42,7 @@ return [
                 'cn' => 'name',
                 'mail' => 'email',
                 // 'memberOf' => 'memberOf',
+                // 'supannEtablissement' => 'userprofile_institution_id',
             ],
             'production' => [
                 'roles' => [
@@ -55,6 +56,14 @@ return [
                     'guest' => '(memberOf=*xxx-guest*)',
                     'annotator' => '(memberOf=*xxx-annotator*)',
                 ],
+            ],
+            // Keys to store as user setting when the user is created.
+            // The values should be mapped in the attribute map above,
+            // except ones starting with `userprofile_`, always stored.
+            // Warning: these values are not updated automatically.
+            'user_settings' => [
+                // 'locale' => 'fr',
+                // 'guest_agreed_terms' => true,
             ],
         ],
     ],

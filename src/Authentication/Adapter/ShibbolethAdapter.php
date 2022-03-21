@@ -48,6 +48,7 @@ use Laminas\Authentication\Result;
 use Laminas\Http\PhpEnvironment\RemoteAddress;
 use Laminas\Log\Logger;
 use Omeka\Entity\User;
+use Omeka\Entity\UserSetting;
 use Omeka\Stdlib\Message;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
@@ -93,7 +94,8 @@ class ShibbolethAdapter extends AbstractAdapter
             // 'displayName' => 'name',
             'cn' => 'name',
             'mail' => 'email',
-            'memberOf' => 'memberOf',
+            // 'memberOf' => 'memberOf',
+            // 'supannEtablissement' => 'userprofile_institution_id',
         ],
         'production' => [
             'roles' => [
@@ -120,6 +122,13 @@ class ShibbolethAdapter extends AbstractAdapter
                 'guest' => '',
                 'annotator' => '',
             ],
+        ],
+        // Keys to store as user setting when the user is created.
+        // The values should be mapped in the attribute map above,
+        // except ones starting with `userprofile_`, always stored.
+        // Warning: these values are not updated automatically.
+        'user_settings' => [
+            // 'locale',
         ],
     ];
 
@@ -225,6 +234,22 @@ class ShibbolethAdapter extends AbstractAdapter
             $user->setEmail($email);
             $user->setRole($role);
             $user->setIsActive(true);
+            $storeSettings = $this->config['user_settings'] ?? [];
+            foreach ($this->config['attrMap'] as $key) {
+                if (substr($key, 0, 12) === 'userprofile_') {
+                    $storeSettings[] = $key;
+                }
+            }
+            $storeSettings = array_unique($storeSettings);
+            foreach ($storeSettings as $storeSetting) {
+                if (isset($userAttrs[$storeSetting])) {
+                    $userSetting = new UserSetting();
+                    $userSetting->setUser($user);
+                    $userSetting->setId($storeSetting);
+                    $userSetting->setValue($userAttrs[$storeSetting]);
+                    $this->entityManager->persist($userSetting);
+                }
+            }
         }
 
         if ($user) {
