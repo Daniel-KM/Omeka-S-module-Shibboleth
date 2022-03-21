@@ -23,10 +23,10 @@ class AuthenticationServiceFactory implements FactoryInterface
      *
      * @return AuthenticationService
      */
-    public function __invoke(ContainerInterface $serviceLocator, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
     {
-        $entityManager = $serviceLocator->get('Omeka\EntityManager');
-        $status = $serviceLocator->get('Omeka\Status');
+        $entityManager = $services->get('Omeka\EntityManager');
+        $status = $services->get('Omeka\Status');
 
         // Skip auth retrieval entirely if we're installing or migrating.
         if (!$status->isInstalled() ||
@@ -46,8 +46,8 @@ class AuthenticationServiceFactory implements FactoryInterface
             } else {
                 // Authenticate using user/password for all other requests.
                 $storage = new DoctrineWrapper(new Session, $userRepository);
-                $config = $serviceLocator->get('Config');
-                $logger = $serviceLocator->get('Omeka\Logger');
+                $config = $services->get('Config');
+                $logger = $services->get('Omeka\Logger');
                 $adapter = empty($config['shibboleth']['config']['shibboleth_password_login'])
                     ? new ShibbolethAdapter($entityManager, $logger, $config['shibboleth']['params'], null)
                     : new ShibbolethOrPasswordAdapter($entityManager, $logger, $config['shibboleth']['params'], null);
