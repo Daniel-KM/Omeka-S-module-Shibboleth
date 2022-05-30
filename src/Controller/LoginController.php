@@ -42,9 +42,9 @@ class LoginController extends \Omeka\Controller\LoginController
             return $this->redirect()->toUrl($redirectUrl);
         }
 
-        return $user->getRole() === 'guest'
-            ? $this->redirect()->toRoute('top')
-            : $this->redirect()->toRoute('admin');
+        return $this->userIsAllowed('Omeka\Controller\Admin\Index', 'index')
+            ? $this->redirect()->toRoute('admin')
+            : $this->redirect()->toRoute('top');
     }
 
     public function logoutAction()
