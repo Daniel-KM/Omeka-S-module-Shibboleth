@@ -51,17 +51,27 @@ return [
             // Warning, if the mapping has an issue and if there is no default
             // role, the user will be deactivated, even admins.
             'role_update' => false,
+            // Mapping of the roles for production use.
             'production' => [
                 'roles' => [
-                    'global_admin' => '(memberOf=*xxx-global_admin*)',
-                    'site_admin' => '(memberOf=*xxx-site_admin*)',
-                    'editor' => '(memberOf=*xxx-editor*)',
-                    'reviewer' => '(memberOf=*xxx-reviewer*)',
-                    'author' => '(memberOf=*xxx-author*)',
-                    'researcher' => '(shibIdentityProvider=xxxx)',
+                    // 'global_admin' => '(memberOf=*xxx-global_admin*)',
+                    // 'site_admin' => '(memberOf=*xxx-site_admin*)',
+                    // 'editor' => '(memberOf=*xxx-editor*)',
+                    // 'reviewer' => '(memberOf=*xxx-reviewer*)',
+                    // 'author' => '(memberOf=*xxx-author*)',
+                    // 'researcher' => '(shibIdentityProvider=xxxx)',
+                    // // These roles require modules.
+                    // 'guest' => '(memberOf=*xxx-guest*)',
+                    // 'annotator' => '(memberOf=*xxx-annotator*)',
+                    'global_admin' => '',
+                    'site_admin' => '',
+                    'editor' => '',
+                    'reviewer' => '',
+                    'author' => '',
+                    'researcher' => '',
                     // These roles require modules.
-                    'guest' => '(memberOf=*xxx-guest*)',
-                    'annotator' => '(memberOf=*xxx-annotator*)',
+                    'guest' => '',
+                    'annotator' => '',
                 ],
             ],
             // Keys to store as user setting when the user is created.

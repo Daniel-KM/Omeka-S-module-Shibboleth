@@ -104,6 +104,7 @@ class ShibbolethAdapter extends AbstractAdapter
         // Warning, if the mapping has an issue and if there is no default
         // role, the user will be deactivated, even admins.
         'role_update' => false,
+        // Mapping of the roles for production use.
         'production' => [
             'roles' => [
                 'global_admin' => '',
@@ -126,6 +127,7 @@ class ShibbolethAdapter extends AbstractAdapter
                 'reviewer' => '',
                 'author' => '',
                 'researcher' => '',
+                // These roles require modules.
                 'guest' => '',
                 'annotator' => '',
             ],
@@ -372,7 +374,8 @@ class ShibbolethAdapter extends AbstractAdapter
         $userAttrs = $this->extractAttributes();
         $entry = \Net_LDAP2_Entry::createFresh('', $userAttrs);
 
-        foreach ($this->config['production']['roles'] as $role => $ldapRole) {
+        $roles = array_filter($this->config['production']['roles']);
+        foreach ($roles as $role => $ldapRole) {
             $roleUser = \Net_LDAP2_Filter::parse($ldapRole);
             if ($roleUser
                 && is_a($roleUser, \Net_LDAP2_Filter::class)
