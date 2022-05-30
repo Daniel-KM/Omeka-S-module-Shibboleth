@@ -54,7 +54,8 @@ key `identityVar` may be updated to `uid` if the service doesn't provide the
 You can add user settings too, for example the institution or keys for the
 module [User Profile] (`'supannEtablissement' => 'userprofile_institution_id'`).
 All keys starting with `userprofile_` or in the specified list `user_settings`
-will be stored when the user will be created (no update later).
+will be stored when the user will be created (no update later). Static settings
+can be appended too.
 
 Before moving into production, check the security and check the rights of each
 role.
@@ -146,9 +147,11 @@ Copyright
 
 * Copyright Ivan Novakov, 2013 (see [ZfcShib])
 * Copyright Vincent Pretet, 2016-2017 for Université Paris 1 - Panthéon-Sorbonne
-* Copyright Daniel Berthereau, 2019-2021 (see [Daniel-KM])
+* Copyright Daniel Berthereau, 2019-2022 (see [Daniel-KM])
 
-First developed for the [Nubis] of [Université Paris 1 - Panthéon-Sorbonne].
+First developed for the digital library [Nubis] of [Université Paris 1 - Panthéon-Sorbonne]
+and improved for the institutional repository of student works [Dante] of the
+[Université de Toulouse Jean-Jaurès].
 
 
 [Shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth
@@ -170,5 +173,7 @@ First developed for the [Nubis] of [Université Paris 1 - Panthéon-Sorbonne].
 [LGPL v3.0]: https://github.com/pear/Net_LDAP2/raw/master/LICENSE
 [Nubis]: https://nubis.univ-paris1.fr
 [Université Paris 1 - Panthéon-Sorbonne]: https://www.pantheonsorbonne.fr
+[Dante]: https://dante.univ-tlse2.fr
+[Université de Toulouse Jean-Jaurès]: https://www.univ-tlse2.fr
 [GitLab]: https://gitlab.com/Daniel-KM
 [Daniel-KM]: https://gitlab.com/Daniel-KM "Daniel Berthereau"
