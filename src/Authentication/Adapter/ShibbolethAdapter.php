@@ -96,6 +96,7 @@ class ShibbolethAdapter extends AbstractAdapter
             'mail' => 'email',
             // 'memberOf' => 'memberOf',
             // 'supannEtablissement' => 'userprofile_institution_id',
+            // 'anotherValue' => 'a_user_setting_key',
         ],
         // When the role is not found, use a default role.
         // It should be null or "guest" for security.
@@ -133,11 +134,17 @@ class ShibbolethAdapter extends AbstractAdapter
             ],
         ],
         // Keys to store as user setting when the user is created.
-        // The values should be mapped in the attribute map above,
-        // except ones starting with `userprofile_`, always stored.
+        // Values may be static ('locale' => 'fr') or mapped ('institution').
+        // Mapped values (with a numeric id) should be mapped in attrMap
+        // above. Mapped keys starting with `userprofile_` in attrMap are
+        // automatically appended.
         // Warning: these values are not updated automatically.
         'user_settings' => [
-            // 'locale',
+            // Static keys.
+            // 'locale' => 'fr',
+            // 'guest_agreed_terms' => true,
+            // Dynamic keys.
+            // 'a_user_setting_key',
         ],
     ];
 
@@ -243,6 +250,7 @@ class ShibbolethAdapter extends AbstractAdapter
             }
         }
         // Else create and activate a user, if there is a role.
+        // Manage the user settings too.
         elseif ($role) {
             // Manage special config in Shibboleth.
             if (empty($userAttrs['name'])) {
@@ -259,12 +267,32 @@ class ShibbolethAdapter extends AbstractAdapter
             $user->setEmail($email);
             $user->setRole($role);
             $user->setIsActive(true);
-            $storeSettings = $this->config['user_settings'] ?? [];
+
+            // Store static settings or prepare it for dynamic.
+            $storeSettings = [];
+            $userSettings = $this->config['user_settings'] ?? [];
+            foreach ($userSettings as $key => $value) {
+                if (is_numeric($key)) {
+                    $storeSettings[] = $value;
+                } else {
+                    $userSetting = new UserSetting();
+                    $userSetting->setUser($user);
+                    $userSetting->setId($key);
+                    $userSetting->setValue($value);
+                    $this->entityManager->persist($userSetting);
+                }
+            }
+
+            // Append "userprofile_xxx" by default (if not static).
             foreach ($this->config['attrMap'] as $key) {
-                if (substr($key, 0, 12) === 'userprofile_') {
+                if (!isset($userSettings[$key])
+                    && substr($key, 0, 12) === 'userprofile_'
+                ) {
                     $storeSettings[] = $key;
                 }
             }
+
+            // Store dynamic settings.
             $storeSettings = array_unique($storeSettings);
             foreach ($storeSettings as $storeSetting) {
                 if (isset($userAttrs[$storeSetting])) {

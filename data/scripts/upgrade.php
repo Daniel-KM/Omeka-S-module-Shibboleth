@@ -23,10 +23,16 @@ $services = $serviceLocator;
 // $plugins = $services->get('ControllerPluginManager');
 // $api = $plugins->get('api');
 
-if (version_compare((string) $oldVersion, '3.3.0.6', '<')) {
+if (version_compare((string) $oldVersion, '3.3.0.7', '<')) {
     $messenger = new Messenger();
     $message = new Message(
         'New options were added in the config to define a default role, to update the role automatically on login, and to store user settings on user creation.' // @translate
     );
     $messenger->addSuccess($message);
+    if (version_compare((string) $oldVersion, '3.3.0.6') === 0) {
+        $message = new Message(
+            'A fix has been done to store data on user creation to manage static and dynamic values.' // @translate
+        );
+        $messenger->addSuccess($message);
+    }
 }

@@ -43,6 +43,7 @@ return [
                 'mail' => 'email',
                 // 'memberOf' => 'memberOf',
                 // 'supannEtablissement' => 'userprofile_institution_id',
+                // 'anotherValue' => 'a_user_setting_key',
             ],
             // When the role is not found, use a default role.
             // It should be null or "guest" for security.
@@ -75,12 +76,17 @@ return [
                 ],
             ],
             // Keys to store as user setting when the user is created.
-            // The values should be mapped in the attribute map above,
-            // except ones starting with `userprofile_`, always stored.
+            // Values may be static ('locale' => 'fr') or mapped ('institution').
+            // Mapped values (with a numeric id) should be mapped in attrMap
+            // above. Mapped keys starting with `userprofile_` in attrMap are
+            // automatically appended.
             // Warning: these values are not updated automatically.
             'user_settings' => [
+                // Static keys.
                 // 'locale' => 'fr',
                 // 'guest_agreed_terms' => true,
+                // Dynamic keys.
+                // 'a_user_setting_key',
             ],
         ],
     ],
