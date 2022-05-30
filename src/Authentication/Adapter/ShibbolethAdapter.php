@@ -244,8 +244,18 @@ class ShibbolethAdapter extends AbstractAdapter
         }
         // Else create and activate a user, if there is a role.
         elseif ($role) {
+            // Manage special config in Shibboleth.
+            if (empty($userAttrs['name'])) {
+                $userName = $email;
+            } else {
+                $userName = is_array($userAttrs['name'])
+                    ? reset(array_filter($userAttrs['name']))
+                    : $userAttrs['name'];
+                $userName = $userName ?: $email;
+            }
+
             $user = new User();
-            $user->setName($userAttrs['name'] ?? $email);
+            $user->setName($userName);
             $user->setEmail($email);
             $user->setRole($role);
             $user->setIsActive(true);
