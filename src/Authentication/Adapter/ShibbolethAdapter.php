@@ -255,11 +255,11 @@ class ShibbolethAdapter extends AbstractAdapter
             // Manage special config in Shibboleth.
             if (empty($userAttrs['name'])) {
                 $userName = $email;
+            } elseif (is_array($userAttrs['name'])) {
+                $userName = array_filter($userAttrs['name']);
+                $userName = reset($userName) ?: $email;
             } else {
-                $userName = is_array($userAttrs['name'])
-                    ? reset(array_filter($userAttrs['name']))
-                    : $userAttrs['name'];
-                $userName = $userName ?: $email;
+                $userName = $userAttrs['name'];
             }
 
             $user = new User();
