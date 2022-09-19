@@ -162,6 +162,7 @@ and improved for the institutional repository of student works [Dante] of the
 [Shibboleth.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/releases
 [installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
 [shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/blob/master/config/module.config.php#L16-56
+[User Profile]: https://gitlab.com/Daniel-KM/Omeka-S-module-UserProfile
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/issues
 [PEAR Net_LDAP2]: https://pear.php.net/package/Net_LDAP2
 [CeCILL v2.1]: https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
