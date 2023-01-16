@@ -147,7 +147,7 @@ Copyright
 
 * Copyright Ivan Novakov, 2013 (see [ZfcShib])
 * Copyright Vincent Pretet, 2016-2017 for Université Paris 1 - Panthéon-Sorbonne
-* Copyright Daniel Berthereau, 2019-2022 (see [Daniel-KM])
+* Copyright Daniel Berthereau, 2019-2023 (see [Daniel-KM])
 
 First developed for the digital library [Nubis] of [Université Paris 1 - Panthéon-Sorbonne]
 and improved for the institutional repository of student works [Dante] of the
@@ -160,7 +160,7 @@ and improved for the institutional repository of student works [Dante] of the
 [php-ldap]: https://www.php.net/manual/fr/book.ldap.php
 [composer]: https://getcomposer.org
 [Shibboleth.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/releases
-[installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
+[Installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
 [shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/blob/master/config/module.config.php#L16-56
 [User Profile]: https://gitlab.com/Daniel-KM/Omeka-S-module-UserProfile
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/issues
