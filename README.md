@@ -8,6 +8,9 @@ Shibboleth (module for Omeka S)
 [Shibboleth] is a module for [Omeka S] that allows to use [Shibboleth single sign-on services]
 to authenticate users.
 
+Because Shibboleth is a variant of the protocol [SAML], this module will not be
+maintained anymore and will be fully replaced by module [Single Sign On] soon.
+
 
 Installation
 ------------
@@ -42,7 +45,7 @@ See general end user documentation for [installing a module].
 Usage
 -----
 
-Copy the array [shibboleth] from the config of the module to the local config
+Copy the [array shibboleth] from the config of the module to the local config
 of Omeka (file `config/local.config.php`) and adapt it to your network config.
 
 In particular, the attribute map may be modified to get the good username. The
@@ -157,11 +160,13 @@ and improved for the institutional repository of student works [Dante] of the
 [Shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth
 [Omeka S]: https://omeka.org/s
 [Shibboleth single sign-on services]: https://www.shibboleth.net
+[SAML]: https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language
+[Single Sign On]: https://gitlab.com/Daniel-KM/Omeka-S-module-SingleSignOn
 [php-ldap]: https://www.php.net/manual/fr/book.ldap.php
 [composer]: https://getcomposer.org
 [Shibboleth.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/releases
 [Installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
-[shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/blob/master/config/module.config.php#L16-56
+[array shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/blob/master/config/module.config.php#L16-93
 [User Profile]: https://gitlab.com/Daniel-KM/Omeka-S-module-UserProfile
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/issues
 [PEAR Net_LDAP2]: https://pear.php.net/package/Net_LDAP2
