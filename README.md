@@ -1,6 +1,9 @@
 Shibboleth (module for Omeka S)
 ===============================
 
+> ***IMPORTANT***: This module is deprecated and has been replaced by the module
+> [Single Sign On] and won’t be updated any more.
+
 > __New versions of this module and support for Omeka S version 3.0 and above
 > are available on [GitLab], which seems to respect users and privacy better
 > than the previous repository.__
@@ -8,8 +11,8 @@ Shibboleth (module for Omeka S)
 [Shibboleth] is a module for [Omeka S] that allows to use [Shibboleth single sign-on services]
 to authenticate users.
 
-Because Shibboleth is a variant of the protocol [SAML], this module will not be
-maintained anymore and will be fully replaced by module [Single Sign On] soon.
+Because Shibboleth is an extension of the protocol [SAML], this module is no
+more maintained and is fully replaced by module [Single Sign On].
 
 
 Installation
