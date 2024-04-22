@@ -2,6 +2,7 @@
 
 namespace Shibboleth\Controller;
 
+use Common\Stdlib\PsrMessage;
 use Laminas\Session\Container;
 
 class LoginController extends \Omeka\Controller\LoginController
@@ -23,17 +24,26 @@ class LoginController extends \Omeka\Controller\LoginController
             $message = $result->getMessages();
             if ($message) {
                 $message = is_array($message) ? reset($message) : $message;
-                $this->messenger()->addError(sprintf('Error during authentication via Shibboleth: %s', $message)); // @translate
+                $this->messenger()->addError(new PsrMessage(
+                    'Error during authentication via Shibboleth: {message}', // @translate
+                    ['message' => $message]
+                ));
             } else {
-                $this->messenger()->addError('Error during authentication via Shibboleth'); // @translate
+                $this->messenger()->addError(new PsrMessage(
+                    'Error during authentication via Shibboleth.' // @translate
+                ));
             }
-            $this->messenger()->addError('The resource you were trying to access is restricted'); // @translate
+            $this->messenger()->addError(new PsrMessage(
+                'The resource you were trying to access is restricted.' // @translate
+            ));
             return $this->redirect()->toRoute('top');
         }
 
         $user = $this->auth->getIdentity();
 
-        $this->messenger()->addSuccess('Successfully logged in'); // @translate
+        $this->messenger()->addSuccess(new PsrMessage(
+            'Successfully logged in' // @translate
+        ));
         $eventManager = $this->getEventManager();
         $eventManager->trigger('user.login', $user);
         $session = $sessionManager->getStorage();
@@ -58,7 +68,9 @@ class LoginController extends \Omeka\Controller\LoginController
 
         $sessionManager->destroy();
 
-        $this->messenger()->addSuccess('Successfully logged out'); // @translate
+        $this->messenger()->addSuccess(new PsrMessage(
+            'Successfully logged out' // @translate
+        ));
 
         $shibbolethLogout = $this->settings()->get('shibboleth_url_logout') ?: '/Shibboleth.sso/Logout';
         $url = $shibbolethLogout . '?return=' . rawurlencode($this->viewHelpers()->get('url')('top'));

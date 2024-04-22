@@ -34,18 +34,27 @@
  */
 namespace Shibboleth;
 
-if (!class_exists(\Generic\AbstractModule::class)) {
-    require file_exists(dirname(__DIR__) . '/Generic/AbstractModule.php')
-        ? dirname(__DIR__) . '/Generic/AbstractModule.php'
-        : __DIR__ . '/src/Generic/AbstractModule.php';
+if (!class_exists(\Common\TraitModule::class)) {
+    require_once dirname(__DIR__) . '/Common/TraitModule.php';
 }
 
-use Generic\AbstractModule;
+use Common\Stdlib\PsrMessage;
+use Common\TraitModule;
 use Laminas\ModuleManager\ModuleManager;
+use Omeka\Module\AbstractModule;
 use Omeka\Module\Exception\ModuleCannotInstallException;
 
+/**
+ * Shibboleth.
+ *
+ * @copyright Vincent Pretet, 2016-2017 for Université Paris 1 - Panthéon-Sorbonne
+ * @copyright Daniel Berthereau, 2019-2024
+ * @license http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
+ */
 class Module extends AbstractModule
 {
+    use TraitModule;
+
     const NAMESPACE = __NAMESPACE__;
 
     public function init(ModuleManager $moduleManager): void
@@ -55,26 +64,39 @@ class Module extends AbstractModule
 
     protected function preInstall(): void
     {
+        $services = $this->getServiceLocator();
+        $plugins = $services->get('ControllerPluginManager');
+        $translate = $plugins->get('translate');
+        $translator = $services->get('MvcTranslator');
+
+        if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActiveVersion('Common', '3.4.56')) {
+            $message = new \Omeka\Stdlib\Message(
+                $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
+                'Common', '3.4.56'
+            );
+            throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
+        }
+
         if (!extension_loaded('ldap')) {
-            throw new ModuleCannotInstallException((string) new \Omeka\Stdlib\Message(
-                'The module Shibboleth requires the php extension "ldap" to be installed. See %s.', // @translate
-                'https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation'
+            throw new ModuleCannotInstallException((string) new PsrMessage(
+                'The module Shibboleth requires the php extension "ldap" to be installed. See {link}readme{link_end}.', // @translate
+                ['link' => '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation" rel="noopener">', 'link_end' => '</a>']
             ));
         }
 
         $filename = __DIR__ . '/vendor/autoload.php';
         if (!file_exists($filename)) {
-            throw new ModuleCannotInstallException((string) new \Omeka\Stdlib\Message(
-                'The module Shibboleth requires to be installed with composer or extracted from a release. See %s.',
-                'https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation'
+            throw new ModuleCannotInstallException((string) new PsrMessage(
+                'The module Shibboleth requires to be installed with composer or extracted from a release. See {link}readme{link_end}.', // @translate
+                ['link' => '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation" rel="noopener">', 'link_end' => '</a>']
             ));
         }
 
         require_once $filename;
         if (!class_exists('Net_LDAP2_Filter') || !class_exists('Net_LDAP2_Entry')) {
-            throw new ModuleCannotInstallException((string) new \Omeka\Stdlib\Message(
-                'The module Shibboleth requires the composer package "pear/neet_ldap2" to be installed. See %s.', // @translate
-                'https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation'
+            throw new ModuleCannotInstallException((string) new PsrMessage(
+                'The module Shibboleth requires the composer package "pear/neet_ldap2" to be installed. See {link}readme{link_end}.', // @translate
+                ['link' => '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation" rel="noopener">', 'link_end' => '</a>']
             ));
         }
 
@@ -84,9 +106,9 @@ class Module extends AbstractModule
         if (empty($currentConfig['shibboleth']['params'])
             || $currentConfig['shibboleth']['params'] === $defaultConfig['shibboleth']['params']
         ) {
-            throw new ModuleCannotInstallException((string) new \Omeka\Stdlib\Message(
-                'The module Shibboleth requires the Omeka config in "config/local.config.php" to be adapted to your ldap. See %s.', // @translate
-                'https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation'
+            throw new ModuleCannotInstallException((string) new PsrMessage(
+                'The module Shibboleth requires the Omeka config in "config/local.config.php" to be adapted to your ldap. See {link}readme{link_end}.', // @translate
+                ['link' => '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth#installation" rel="noopener">', 'link_end' => '</a>']
             ));
         }
     }
