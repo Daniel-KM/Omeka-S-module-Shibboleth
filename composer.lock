@@ -59,21 +59,24 @@
         },
         {
             "name": "pear/net_ldap2",
-            "version": "v2.2.1",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Net_LDAP2.git",
-                "reference": "0cbfdadca4b55cb7543ad0a6b994fe0e4ed5c3c1"
+                "reference": "6eae6d20533469ffe1c01684923cd09f0fae3b77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Net_LDAP2/zipball/0cbfdadca4b55cb7543ad0a6b994fe0e4ed5c3c1",
-                "reference": "0cbfdadca4b55cb7543ad0a6b994fe0e4ed5c3c1",
+                "url": "https://api.github.com/repos/pear/Net_LDAP2/zipball/6eae6d20533469ffe1c01684923cd09f0fae3b77",
+                "reference": "6eae6d20533469ffe1c01684923cd09f0fae3b77",
                 "shasum": ""
             },
             "require": {
                 "ext-ldap": "*",
                 "pear/pear-core-minimal": "^1.10.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9 || ^10.3"
             },
             "type": "library",
             "autoload": {
@@ -98,34 +101,35 @@
                 "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Net_LDAP2",
                 "source": "https://github.com/pear/Net_LDAP2"
             },
-            "time": "2023-02-08T07:25:31+00:00"
+            "time": "2023-10-12T20:00:01+00:00"
         },
         {
             "name": "pear/pear-core-minimal",
-            "version": "v1.10.13",
+            "version": "v1.10.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/pear-core-minimal.git",
-                "reference": "aed862e95fd286c53cc546734868dc38ff4b5b1d"
+                "reference": "ce0adade8b97561656ace07cdaac4751c271ea8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/pear-core-minimal/zipball/aed862e95fd286c53cc546734868dc38ff4b5b1d",
-                "reference": "aed862e95fd286c53cc546734868dc38ff4b5b1d",
+                "url": "https://api.github.com/repos/pear/pear-core-minimal/zipball/ce0adade8b97561656ace07cdaac4751c271ea8c",
+                "reference": "ce0adade8b97561656ace07cdaac4751c271ea8c",
                 "shasum": ""
             },
             "require": {
                 "pear/console_getopt": "~1.4",
-                "pear/pear_exception": "~1.0"
+                "pear/pear_exception": "~1.0",
+                "php": ">=5.4"
             },
             "replace": {
                 "rsky/pear-core-min": "self.version"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "": "src/"
-                }
+                "classmap": [
+                    "src/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "include-path": [
@@ -146,7 +150,7 @@
                 "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=PEAR",
                 "source": "https://github.com/pear/pear-core-minimal"
             },
-            "time": "2023-04-19T19:15:47+00:00"
+            "time": "2024-03-16T18:41:45+00:00"
         },
         {
             "name": "pear/pear_exception",
@@ -216,5 +220,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.2.0"
 }
