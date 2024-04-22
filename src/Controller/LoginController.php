@@ -23,9 +23,9 @@ class LoginController extends \Omeka\Controller\LoginController
             $message = $result->getMessages();
             if ($message) {
                 $message = is_array($message) ? reset($message) : $message;
-                $this->messenger()->addError(sprintf('Error during authentication: %s', $message)); // @translate
+                $this->messenger()->addError(sprintf('Error during authentication via Shibboleth: %s', $message)); // @translate
             } else {
-                $this->messenger()->addError('Error during authentication'); // @translate
+                $this->messenger()->addError('Error during authentication via Shibboleth'); // @translate
             }
             $this->messenger()->addError('The resource you were trying to access is restricted'); // @translate
             return $this->redirect()->toRoute('top');
