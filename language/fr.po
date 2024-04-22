@@ -1,0 +1,104 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-22 00:00+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: Module.php:74
+#, php-format
+msgid "The module %1$s should be upgraded to version %2$s or later."
+msgstr "Le module %1$s doit être mis à niveau à la version %2$s ou supérieure."
+
+#: data/scripts/upgrade.php:36
+msgid ""
+"New options were added in the config to define a default role, to update the "
+"role automatically on login, and to store user settings on user creation."
+msgstr ""
+"De nouvelles options ont été ajoutées dans la config pour définir un rôle "
+"par défaut, pour ajouter le rôle automatiquement à la connexion et pour "
+"enregistrer les paramètres utilisateurs à la création d’un utilisateur."
+
+#: data/scripts/upgrade.php:41
+msgid ""
+"A fix has been done to store data on user creation to manage static and "
+"dynamic values."
+msgstr ""
+"Un correctif a été ajouté pour enregistrer les données des nouveaux "
+"utilisateurs afin de gérer les valeurs statiques et dynamiques."
+
+#: Module.php:82
+msgid ""
+"The module Shibboleth requires the php extension \"ldap\" to be installed. "
+"See {link}readme{link_end}."
+msgstr ""
+"Le module Shibboleth requiert que le paquet composer « pear/neet_ldap2 » "
+"soit installé. Voir {link}readme{link_end}."
+
+#: Module.php:90
+msgid ""
+"The module Shibboleth requires to be installed with composer or extracted "
+"from a release. See {link}readme{link_end}."
+msgstr ""
+"Le module Shibboleth doit être installé par composer ou extrait d’une "
+"livraison. Voir {link}readme{link_end}."
+
+#: Module.php:98
+msgid ""
+"The module Shibboleth requires the composer package \"pear/neet_ldap2\" to "
+"be installed. See {link}readme{link_end}."
+msgstr ""
+"Le module Shibboleth requiert que le paquet composer « pear/neet_ldap2 » "
+"soit installé. Voir {link}readme{link_end}."
+
+#: Module.php:110
+msgid ""
+"The module Shibboleth requires the Omeka config in \"config/local.config."
+"php\" to be adapted to your ldap. See {link}readme{link_end}."
+msgstr ""
+"Le module Shibboleth requiert que la config Omeka dans « config/local.config."
+"php » soit adaptée à votre ldap. Voir {link}readme{link_end}."
+
+#: src/Authentication/Adapter/ShibbolethAdapter.php:205
+msgid ""
+"Error in the config: the identityVar \"{key}\" is not found in extracted "
+"attributes."
+msgstr ""
+"Erreur dans la config : la identityVar « {key} » n’a pas été trouvée dans "
+"les attributs extraits."
+
+#: src/Authentication/Adapter/ShibbolethAdapter.php:217
+msgid "Error in the config: the identityVar \"{key}\" has multiple values."
+msgstr "Erreur dans la config : la identityVar « {key} » a plusieurs valeurs."
+
+#: src/Authentication/Adapter/ShibbolethAdapter.php:325
+msgid "User matching \"{email}\" not found."
+msgstr "L’utilisateur correspondant à « {email} » n’a pas été trouvé."
+
+#: src/Authentication/Adapter/ShibbolethAdapter.php:340
+msgid "Failed login attempt from ip \"{ip}\"."
+msgstr "Échec de la connexion depuis l’ip « {ip} »."
+
+#: src/Controller/LoginController.php:28
+msgid "Error during authentication via Shibboleth: {message}"
+msgstr "Erreur durant l’authentification via Shibboleth : {message}"
+
+#: src/Controller/LoginController.php:33
+msgid "Error during authentication via Shibboleth."
+msgstr "Erreur durant l’authentification via Shibboleth."
+
+#: src/Controller/LoginController.php:37
+msgid "The resource you were trying to access is restricted."
+msgstr "La ressource à laquelle vous souhaitez accéder est en accès restreint."

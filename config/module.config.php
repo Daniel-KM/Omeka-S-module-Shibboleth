@@ -13,6 +13,16 @@ return [
             'Omeka\AuthenticationService' => Service\AuthenticationServiceFactory::class,
         ],
     ],
+    'translator' => [
+        'translation_file_patterns' => [
+            [
+                'type' => 'gettext',
+                'base_dir' => dirname(__DIR__) . '/language',
+                'pattern' => '%s.mo',
+                'text_domain' => null,
+            ],
+        ],
+    ],
     // Copy this array into Omeka config/local.config.php and adapt it to your network.
     'shibboleth' => [
         // This option can be skipped.
