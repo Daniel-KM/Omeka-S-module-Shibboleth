@@ -2,7 +2,7 @@ Shibboleth (module for Omeka S)
 ===============================
 
 > ***IMPORTANT***: This module is deprecated and has been replaced by the module
-> [Single Sign On] and won’t be updated any more.
+> [Single Sign-On] and won’t be updated any more.
 
 > __New versions of this module and support for Omeka S version 3.0 and above
 > are available on [GitLab], which seems to respect users and privacy better
@@ -12,7 +12,7 @@ Shibboleth (module for Omeka S)
 to authenticate users.
 
 Because Shibboleth is an extension of the protocol [SAML], this module is no
-more maintained and is fully replaced by module [Single Sign On].
+more maintained and is fully replaced by module [Single Sign-On].
 
 
 Installation
@@ -23,6 +23,8 @@ server, generally a package named "php-ldap" in most common Linux distributions.
 
 Furthermore, it uses [composer] too to manage a dependency. So use the
 release zip to install it, or use and init the source.
+
+See general end user documentation for [installing a module].
 
 * From the zip
 
@@ -38,11 +40,8 @@ the module to `Shibboleth`, and go to the root of the module, and run:
 composer install --no-dev
 ```
 
-Before enabling the module in admin interface, the config must be updated.
-
-Then install it like any other Omeka module.
-
-See general end user documentation for [installing a module].
+Before enabling the module in admin interface, the config (see below) must be
+updated.
 
 
 Usage
@@ -153,7 +152,7 @@ Copyright
 
 * Copyright Ivan Novakov, 2013 (see [ZfcShib])
 * Copyright Vincent Pretet, 2016-2017 for Université Paris 1 - Panthéon-Sorbonne
-* Copyright Daniel Berthereau, 2019-2023 (see [Daniel-KM])
+* Copyright Daniel Berthereau, 2019-2024 (see [Daniel-KM])
 
 First developed for the digital library [Nubis] of [Université Paris 1 - Panthéon-Sorbonne]
 and improved for the institutional repository of student works [Dante] of the
@@ -164,11 +163,11 @@ and improved for the institutional repository of student works [Dante] of the
 [Omeka S]: https://omeka.org/s
 [Shibboleth single sign-on services]: https://www.shibboleth.net
 [SAML]: https://en.wikipedia.org/wiki/Security_Assertion_Markup_Language
-[Single Sign On]: https://gitlab.com/Daniel-KM/Omeka-S-module-SingleSignOn
+[Single Sign-On]: https://gitlab.com/Daniel-KM/Omeka-S-module-SingleSignOn
 [php-ldap]: https://www.php.net/manual/fr/book.ldap.php
 [composer]: https://getcomposer.org
 [Shibboleth.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/releases
-[Installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
+[installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
 [array shibboleth]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/blob/master/config/module.config.php#L16-93
 [User Profile]: https://gitlab.com/Daniel-KM/Omeka-S-module-UserProfile
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Shibboleth/-/issues
