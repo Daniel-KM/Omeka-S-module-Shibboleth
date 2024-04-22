@@ -23,6 +23,14 @@ $connection = $services->get('Omeka\Connection');
 $messenger = $plugins->get('messenger');
 $entityManager = $services->get('Omeka\EntityManager');
 
+if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActiveVersion('Common', '3.4.56')) {
+    $message = new \Omeka\Stdlib\Message(
+        'The module %1$s should be upgraded to version %2$s or later.', // @translate
+        'Common', '3.4.56'
+    );
+    throw new ModuleCannotInstallException((string) $message);
+}
+
 if (version_compare((string) $oldVersion, '3.3.0.7', '<')) {
     $message = new Message(
         'New options were added in the config to define a default role, to update the role automatically on login, and to store user settings on user creation.' // @translate
