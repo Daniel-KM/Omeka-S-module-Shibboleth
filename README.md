@@ -152,7 +152,7 @@ Copyright
 
 * Copyright Ivan Novakov, 2013 (see [ZfcShib])
 * Copyright Vincent Pretet, 2016-2017 for Université Paris 1 - Panthéon-Sorbonne
-* Copyright Daniel Berthereau, 2019-2024 (see [Daniel-KM])
+* Copyright Daniel Berthereau, 2019-2025 (see [Daniel-KM])
 
 First developed for the digital library [Nubis] of [Université Paris 1 - Panthéon-Sorbonne]
 and improved for the institutional repository of student works [Dante] of the
