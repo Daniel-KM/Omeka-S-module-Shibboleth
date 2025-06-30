@@ -46,9 +46,10 @@ class AuthenticationServiceFactory implements FactoryInterface
                 $storage = new DoctrineWrapper(new Session, $userRepository);
                 $config = $services->get('Config');
                 $logger = $services->get('Omeka\Logger');
+                $translator = $services->get('MvcTranslator');
                 $adapter = empty($config['shibboleth']['config']['shibboleth_password_login'])
-                    ? new ShibbolethAdapter($entityManager, $logger, $config['shibboleth']['params'], null)
-                    : new ShibbolethOrPasswordAdapter($entityManager, $logger, $config['shibboleth']['params'], null);
+                    ? new ShibbolethAdapter($entityManager, $logger, $translator, $config['shibboleth']['params'], null)
+                    : new ShibbolethOrPasswordAdapter($entityManager, $logger, $translator, $config['shibboleth']['params'], null);
             }
         }
 

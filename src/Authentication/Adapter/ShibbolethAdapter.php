@@ -47,6 +47,7 @@ use Doctrine\ORM\EntityManager;
 use Laminas\Authentication\Adapter\AbstractAdapter;
 use Laminas\Authentication\Result;
 use Laminas\Http\PhpEnvironment\RemoteAddress;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Log\Logger;
 use Omeka\Entity\User;
 use Omeka\Entity\UserSetting;
@@ -64,6 +65,11 @@ class ShibbolethAdapter extends AbstractAdapter
      * @var Logger
      */
     protected $logger;
+
+    /**
+     * @param \Laminas\I18n\Translator\TranslatorInterface
+     */
+    protected $translator;
 
     /**
      * The configuration array.
@@ -170,12 +176,14 @@ class ShibbolethAdapter extends AbstractAdapter
 
     public function __construct(
         EntityManager $entityManager,
-        Logger $logger = null,
+        Logger $logger,
+        TranslatorInterface $translator,
         array $config = [],
         array $env = null
     ) {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
+        $this->translator = $translator;
         $this->config = $config + $this->defaultConfig;
         $this->env = $env ?: $_SERVER;
     }
@@ -324,7 +332,7 @@ class ShibbolethAdapter extends AbstractAdapter
             [(new PsrMessage(
                 'User matching "{email}" not found.', // @translate
                 ['email' => $email]
-            ))->setTranslator($this->translator())],
+            ))->setTranslator($this->translator)],
             Result::FAILURE_IDENTITY_NOT_FOUND
         );
     }
